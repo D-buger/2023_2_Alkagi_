@@ -104,14 +104,16 @@ public unsafe class Match : MonoBehaviour, IPacketReceiver
             return null;
 
         bool local = LocalPlayerInfo.ID == id;
-        GameObject playerObj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        //GameObject playerObj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        GameObject playerObj = new GameObject("EmptyObject");
         playerObj.name = playerName;
         if (local)
         {
-            GameObject cameraObject = new GameObject($"Player Camera");
-            Camera playerCamera = cameraObject.AddComponent<Camera>();
-            cameraObject.AddComponent<MouseLook>();
-            playerCamera.transform.parent = playerObj.transform;
+            // 플레이어 카메라 생성
+            //GameObject cameraObject = new GameObject($"Player Camera");
+            //Camera playerCamera = cameraObject.AddComponent<Camera>();
+            //cameraObject.AddComponent<MouseLook>();
+            //playerCamera.transform.parent = playerObj.transform;
 
             // test code
             /*
@@ -121,12 +123,12 @@ public unsafe class Match : MonoBehaviour, IPacketReceiver
             playerObj.transform.position = pos;
             //*/
         }
-        PlayerMovement playerMovement = playerObj.AddComponent<PlayerMovement>();
-        playerMovement.Controller = playerObj.AddComponent<CharacterController>();
+        //PlayerMovement playerMovement = playerObj.AddComponent<PlayerMovement>();
+        //playerMovement.Controller = playerObj.AddComponent<CharacterController>();
         Player player = playerObj.AddComponent<Player>();
         player.ID = id;
         player.Name = playerName;
-        player.Movement = playerMovement;
+        //player.Movement = playerMovement;
         player.IsLocal = local;
         Players.Add(id, player);
         return player;

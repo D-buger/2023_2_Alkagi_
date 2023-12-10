@@ -77,6 +77,7 @@ enum class  PACKET_ID : UINT16
 	ROOM_CHAT_RESPONSE = 222,
 	ROOM_CHAT_NOTIFY = 223,
 
+	// Replay
 	REPLAY_SAVE_REQUEST,
 	REPLAY_LOAD_REQUEST,
 	REPLAY_LOAD_RESPONSE
@@ -247,4 +248,3 @@ struct REPLAY_LOAD_DATA_PACKET : public PACKET_HEADER {
 };
 
 #pragma pack(pop) //위에 설정된 패킹설정이 사라짐
-
