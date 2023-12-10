@@ -1,14 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 public unsafe class Match : MonoBehaviour, IPacketReceiver
 {
     public static Match Current;
+
+    [MarshalAs(UnmanagedType.I4)]
+    public int PlayerNum;
+
     public Dictionary<long, Player> Players;
 
     void Awake()
     {
+        PlayerNum = -1;
         Debug.Log("Match started");
         Current = this;
         Players = new Dictionary<long, Player>();
@@ -26,21 +32,21 @@ public unsafe class Match : MonoBehaviour, IPacketReceiver
         Client.TCP.SendPacket2(E_PACKET.ROOM_ENTER_REQUEST, request);
     }
 
-    private void OnGUI()
-    {
-        foreach (Player player in Players.Values)
-        {
-            if (player.ID != LocalPlayerInfo.ID)
-            {
-                Vector3 scpos = GameObject.Find("Player Camera").GetComponent<Camera>().WorldToScreenPoint(player.transform.position);
-                if (scpos.z > 0)
-                {
-                    GUI.contentColor = Color.cyan;
-                    GUI.Label(new Rect(scpos.x, Screen.height - scpos.y, 100, 25), player.Name);
-                }
-            }
-        }
-    }
+    //private void OnGUI()
+    //{
+    //    foreach (Player player in Players.Values)
+    //    {
+    //        if (player.ID != LocalPlayerInfo.ID)
+    //        {
+    //            Vector3 scpos = GameObject.Find("Player Camera").GetComponent<Camera>().WorldToScreenPoint(player.transform.position);
+    //            if (scpos.z > 0)
+    //            {
+    //                GUI.contentColor = Color.cyan;
+    //                GUI.Label(new Rect(scpos.x, Screen.height - scpos.y, 100, 25), player.Name);
+    //            }
+    //        }
+    //    }
+    //}
 
     void OnDestroy()
     {
@@ -55,7 +61,9 @@ public unsafe class Match : MonoBehaviour, IPacketReceiver
         {
             case E_PACKET.ROOM_ENTER_RESPONSE:
                 P_RoomEnterResponse roomEnterResponse = UnsafeCode.ByteArrayToStructure<P_RoomEnterResponse>(packet.data);
+                PlayerNum = roomEnterResponse.PlayerNum;
                 Debug.Log($"ROOM_ENTER_RESPONSE result={roomEnterResponse.result}");
+                Debug.Log($"ROOM_ENTER_RESPONSE PlayerNum={PlayerNum}");
                 break;
 
             case E_PACKET.ROOM_NEW_USER_NTF:
@@ -106,6 +114,7 @@ public unsafe class Match : MonoBehaviour, IPacketReceiver
         bool local = LocalPlayerInfo.ID == id;
         //GameObject playerObj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         GameObject playerObj = new GameObject("EmptyObject");
+
         playerObj.name = playerName;
         if (local)
         {

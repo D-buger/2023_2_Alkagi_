@@ -130,8 +130,9 @@ struct ROOM_ENTER_REQUEST_PACKET : public PACKET_HEADER
 struct ROOM_ENTER_RESPONSE_PACKET : public PACKET_HEADER
 {
 	INT16 Result;
+	INT32 PlayerNum;
 	//char RivaluserID[MAX_USER_ID_LEN + 1] = { 0, };
-	ROOM_ENTER_RESPONSE_PACKET() : Result{ 0 }, PACKET_HEADER(sizeof(*this), PACKET_ID::ROOM_ENTER_RESPONSE) {}
+	ROOM_ENTER_RESPONSE_PACKET() : Result{ 0 }, PlayerNum{ 0 }, PACKET_HEADER(sizeof(*this), PACKET_ID::ROOM_ENTER_RESPONSE) {}
 };
 
 

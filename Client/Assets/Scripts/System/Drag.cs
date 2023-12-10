@@ -3,10 +3,8 @@ using UnityEngine;
 
 public class Drag : MonoBehaviour
 {
-    [SerializeField] private float maxSpeed = 1.0f;
-    [SerializeField] private float maxDragDistance = 20.0f;
-    [SerializeField] private float minDragDistance = 1.0f;
-    [SerializeField] private float hitPower = 0.5f; // 날리는 힘
+    [SerializeField] private float maxDragDistance = 200.0f;
+    [SerializeField] private float hitPower = 1.0f; // 날리는 힘
 
     private Rigidbody rigidbody;
 
@@ -22,13 +20,28 @@ public class Drag : MonoBehaviour
 
     private void OnMouseUp()
     {
-        float angle = 0;
+        float angle = -1;
+        if (GameManager.allowShoot)
+        {
+            if (this.gameObject.tag == "Red" && GameManager.turn % 2 == 1) angle = 0;
+            if (this.gameObject.tag == "Blue" && GameManager.turn % 2 == 0) angle = 180;
+        }
+
+        if (angle == -1) return;
 
         // 마우스 포지션과 오브젝트 거리 저장
+        Vector3 mousePosition = Input.mousePosition;
         Vector3 scrSpace = Camera.main.WorldToScreenPoint(transform.position);
-        Vector3 offset = new Vector3(scrSpace.x - Input.mousePosition.x, 0, scrSpace.y - Input.mousePosition.y);
+        Vector3 offset = new Vector3(scrSpace.x - mousePosition.x, 0, scrSpace.y - mousePosition.y);
 
         float distance = Mathf.Sqrt(offset.x * offset.x + offset.z * offset.z); // 벡터의 크기 계산
+
+        if(distance > maxDragDistance) 
+        {
+            offset = offset.normalized * maxDragDistance;
+            distance = maxDragDistance;
+        }
+
         offset /= distance; // 정규화
 
         if (offset.z > 0)
@@ -52,5 +65,10 @@ public class Drag : MonoBehaviour
 
         while (rigidbody.velocity.magnitude > 0.5f && transform.position.y >= 0)
             yield return new WaitForSeconds(0.1f);
+
+        if(GameManager.turn % 2 == 1)
+            GameObject.Find("Main Camera").GetComponent<GameManager>().player2Turn();
+        else
+            GameObject.Find("Main Camera").GetComponent<GameManager>().player1Turn();
     }
 }

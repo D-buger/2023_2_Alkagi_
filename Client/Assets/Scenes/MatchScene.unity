@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 382781281}
   - component: {fileID: 382781280}
   - component: {fileID: 382781279}
+  - component: {fileID: 382781282}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -215,6 +216,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!114 &382781282
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 382781278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e86058a6f4a0d0b4a87c08ed7bc912a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &423868192
 GameObject:
   m_ObjectHideFlags: 0
@@ -245,6 +258,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a166c81b9c29ce54ba143a9b69e6eec4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlayerNum: 0
 --- !u!4 &423868194
 Transform:
   m_ObjectHideFlags: 0
@@ -285,7 +299,7 @@ GameObject:
   - component: {fileID: 533896631}
   - component: {fileID: 533896630}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Board
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -394,9 +408,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3138781e60fc93e4e93052e565a28b63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 1
-  maxDragDistance: 20
-  minDragDistance: 1
+  maxDragDistance: 300
   hitPower: 1
 --- !u!114 &1697215390
 MonoBehaviour:
@@ -408,6 +420,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6dec9275bd48f3e4a996aec6a4b86ab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1697215396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1697215383}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea3464a907f8a544682350f5e29551fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1805031291
@@ -521,6 +545,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6dec9275bd48f3e4a996aec6a4b86ab1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1993345551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1993345537}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea3464a907f8a544682350f5e29551fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2023341074
 GameObject:
   m_ObjectHideFlags: 0
@@ -607,7 +643,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3239701991658805292, guid: d37e1861eba879447b7e42f1508a471f, type: 3}
       propertyPath: m_LocalScale.y
-      value: 2.5
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 3239701991658805292, guid: d37e1861eba879447b7e42f1508a471f, type: 3}
       propertyPath: m_LocalScale.z
@@ -663,7 +699,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7124438173197407479, guid: d37e1861eba879447b7e42f1508a471f, type: 3}
       propertyPath: maxDragDistance
-      value: 10
+      value: 300
       objectReference: {fileID: 0}
     - target: {fileID: 7578607015935731412, guid: d37e1861eba879447b7e42f1508a471f, type: 3}
       propertyPath: m_Name
@@ -673,6 +709,9 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7578607015935731412, guid: d37e1861eba879447b7e42f1508a471f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1993345551}
     - targetCorrespondingSourceObject: {fileID: 7578607015935731412, guid: d37e1861eba879447b7e42f1508a471f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1993345544}
@@ -695,7 +734,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4673547908903294523, guid: 73135e908b0ad674ca209313837a92e3, type: 3}
       propertyPath: m_LocalScale.y
-      value: 2.5
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 4673547908903294523, guid: 73135e908b0ad674ca209313837a92e3, type: 3}
       propertyPath: m_LocalScale.z
@@ -752,6 +791,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7417515052582182614, guid: 73135e908b0ad674ca209313837a92e3, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1697215384}
+    - targetCorrespondingSourceObject: {fileID: 7417515052582182614, guid: 73135e908b0ad674ca209313837a92e3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1697215396}
     - targetCorrespondingSourceObject: {fileID: 7417515052582182614, guid: 73135e908b0ad674ca209313837a92e3, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1697215390}

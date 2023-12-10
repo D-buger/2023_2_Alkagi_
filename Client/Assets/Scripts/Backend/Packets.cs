@@ -75,11 +75,14 @@ struct P_RoomEnterRequest
     public int roomNumber;
 }
 
-[StructLayout(LayoutKind.Sequential, Size = 2)]
+[StructLayout(LayoutKind.Sequential, Size = 6)]
 struct P_RoomEnterResponse
 {
     [MarshalAs(UnmanagedType.I2)]
     public short result;
+
+    [MarshalAs(UnmanagedType.I4)]
+    public int PlayerNum;
 }
 
 [StructLayout(LayoutKind.Sequential, Size = 41)]

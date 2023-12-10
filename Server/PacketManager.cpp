@@ -292,14 +292,15 @@ void PacketManager::ProcessEnterRoom(UINT32 clientIndex_, UINT16 packetSize_, ch
 	}
 
 	auto roomNumber = pRoomEnterReqPacket->RoomNumber;
-
+	auto pRoom = mRoomManager->GetRoomByNumber(roomNumber);
 
 	// Room::EnterUser()에서 입장하는 유저에게 방안 유저 리스트를 전송한다
 	auto enterResult = mRoomManager->EnterUser(roomNumber, pReqUser);
-
 	{
 		ROOM_ENTER_RESPONSE_PACKET roomEnterResPacket;
 		roomEnterResPacket.Result = enterResult;
+		roomEnterResPacket.PlayerNum = pRoom->GetCurrentUserCount();
+		std::cout << "PlayerNum : " << roomEnterResPacket.PlayerNum << std::endl;
 		SendPacketFunc(clientIndex_, sizeof(ROOM_ENTER_RESPONSE_PACKET), (char*)&roomEnterResPacket);
 	}
 	printf("Response Packet Sended");
@@ -309,12 +310,8 @@ void PacketManager::ProcessEnterRoom(UINT32 clientIndex_, UINT16 packetSize_, ch
 		return;
 	}
 
-	auto pRoom = mRoomManager->GetRoomByNumber(roomNumber);
-
-
 	// 방안 유저들에게 입장하는 유저 정보 전송
 	pRoom->NotifyUserEnter(clientIndex_, pReqUser->GetUserId());
-
 }
 
 
