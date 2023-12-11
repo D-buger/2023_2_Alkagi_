@@ -6,6 +6,8 @@ public class Drag : MonoBehaviour
     [SerializeField] private float maxDragDistance = 200.0f;
     [SerializeField] private float hitPower = 1.0f; // 날리는 힘
 
+    private bool canShoot = true;
+
     private Rigidbody rigidbody;
 
     void Start()
@@ -20,7 +22,7 @@ public class Drag : MonoBehaviour
 
     private void OnMouseUp()
     {
-        if (tag == "Red")
+        if (tag == "Red" && canShoot)
         {
             float angle = 0;
 
@@ -44,10 +46,7 @@ public class Drag : MonoBehaviour
             else
                 angle += 360 - Mathf.Rad2Deg * Mathf.Acos(offset.x);
 
-            offset.x = Mathf.Cos(Mathf.Deg2Rad * angle);
-            offset.z = Mathf.Sin(Mathf.Deg2Rad * angle);
             offset *= distance;
-            offset.y = 3;
 
             rigidbody.AddForce(offset * hitPower / 2, ForceMode.Impulse);
 
@@ -62,6 +61,7 @@ public class Drag : MonoBehaviour
         while (rigidbody.velocity.magnitude > 0.1f && transform.position.y >= 0)
             yield return new WaitForSeconds(0.1f);
 
+        // 진행된 턴 / 2의 나머지가 1인경우 Player2의 턴
         if(GameManager.turn % 2 == 1)
             GameObject.Find("Main Camera").GetComponent<GameManager>().player2Turn();
         else

@@ -59,6 +59,13 @@ public:
 		return motion;
 	}
 
+	Vector3 UpdateBallPosition(Vector3 ballPos)
+	{
+		Vector3 v = { -1.0f, 0.0f, -1.0f };
+		Vector3 result = { ballPos.x * v.z,ballPos.y,ballPos.z * v.z };
+		return result;
+	}
+
 protected:
 	INT32 mIndex = -1;
 

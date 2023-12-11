@@ -13,10 +13,11 @@ public unsafe class Match : MonoBehaviour, IPacketReceiver
     public Dictionary<long, Player> Players;
 
     public GameObject prefabTeamSet;
+    public GameObject prefabBlueBall;
 
     void Awake()
     {
-        PlayerNum = -1;
+        PlayerNum = 0;
         Debug.Log("Match started");
         Current = this;
         Players = new Dictionary<long, Player>();
@@ -99,7 +100,8 @@ public unsafe class Match : MonoBehaviour, IPacketReceiver
 
             case E_PACKET.UPDATE_BALL_POSITION:
                 P_UpdateBallPosition updateBallPosition = UnsafeCode.ByteArrayToStructure<P_UpdateBallPosition>(packet.data);
-                MoveBall(updateBallPosition.child_index, updateBallPosition.dx, updateBallPosition.dz); 
+                MoveBall(updateBallPosition.child_index, updateBallPosition.ballPos);
+                Debug.Log("Update Ball Position : " + updateBallPosition.ballPos);
                 break;
 
             case E_PACKET.REPLAY_LOAD_RESPONSE:
@@ -132,9 +134,7 @@ public unsafe class Match : MonoBehaviour, IPacketReceiver
             //cameraObject.AddComponent<MouseLook>();
             //playerCamera.transform.parent = playerObj.transform;
 
-            //GameObject teamSet = Instantiate(prefabTeamSet);
-            //teamSet.transform.parent = playerObj.transform;
-
+            GameObject teamSet = Instantiate(prefabTeamSet);
             // test code
             /*
             float randomX = Random.Range(-25, 26);
@@ -163,8 +163,10 @@ public unsafe class Match : MonoBehaviour, IPacketReceiver
         }
     }
 
-    private void MoveBall(int index, float x, float z)
+    private void MoveBall(int index, Vector3 ballPos)
     {
         // 파란색 오브젝트 생성 후 위치에 옮겨준다.
+        GameObject EnemySet = Instantiate(prefabBlueBall);
+        EnemySet.transform.position = ballPos;
     }
 }

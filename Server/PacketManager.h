@@ -57,6 +57,7 @@ private:
 	void ProcessLeaveRoom(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_);
 	void ProcessPlayerMovement(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_);
 	void ProcessBallPosition(UINT32 cliendIndex_, UINT16 packetSize_, char* pPacket_);
+	void ProcessPlayerTurnNotify(User& user_, UINT16 packetSize_, const std::string noticeTurnMsg);
 	void ProcessRoomChatMessage(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_);
 
 	void ProcessSaveReplayRequest(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_);

@@ -77,6 +77,8 @@ enum class  PACKET_ID : UINT16
 	BALL_POSITION,
 	UPDATE_BALL_POSITION,
 
+	PLAYER_TURN_NOTIFY,
+
 	ROOM_CHAT_REQUEST = 221,
 	ROOM_CHAT_RESPONSE = 222,
 	ROOM_CHAT_NOTIFY = 223,
@@ -184,8 +186,7 @@ struct BALL_POSITION : public PACKET_HEADER
 {
 	INT64 userUUID;
 	INT32 childIndex;
-	float dx;
-	float dz;
+	Vector3 ballPos;
 
 	BALL_POSITION() : PACKET_HEADER(sizeof(*this), PACKET_ID::BALL_POSITION) {}
 };
@@ -194,10 +195,19 @@ struct UPDATE_BALL_POSITION : public PACKET_HEADER
 {
 	INT64 userUUID;
 	INT32 childIndex;
-	float dx;
-	float dz;
+	Vector3 ballPos;
 
 	UPDATE_BALL_POSITION() : PACKET_HEADER(sizeof(*this), PACKET_ID::UPDATE_BALL_POSITION) {}
+};
+
+const static int MAX_TURN_MSG_SIZE = 256;
+struct PLAYER_TURN_NOTIFY : public PACKET_HEADER
+{
+	char userID[MAX_TURN_MSG_SIZE + 1] = { 0, };
+	INT32 curTurn;
+	char Msg[MAX_TURN_MSG_SIZE + 1] = { 0, };
+
+	PLAYER_TURN_NOTIFY() : PACKET_HEADER(sizeof(*this), PACKET_ID::PLAYER_TURN_NOTIFY) {}
 };
 
 //- 룸 나가기 요청

@@ -300,6 +300,7 @@ void PacketManager::ProcessEnterRoom(UINT32 clientIndex_, UINT16 packetSize_, ch
 	{
 		ROOM_ENTER_RESPONSE_PACKET roomEnterResPacket;
 		roomEnterResPacket.Result = enterResult;
+
 		roomEnterResPacket.PlayerNum = pRoom->GetCurrentUserCount();
 		std::cout << "PlayerNum : " << roomEnterResPacket.PlayerNum << std::endl;
 		SendPacketFunc(clientIndex_, sizeof(ROOM_ENTER_RESPONSE_PACKET), (char*)&roomEnterResPacket);
@@ -380,7 +381,7 @@ void PacketManager::ProcessBallPosition(UINT32 clientIndex_, UINT16 packetSize_,
 	}
 
 	printf("[ProcessPlayerMovement] userUUID(%lld), index=%d dx=%f, dy=%f \n",
-		BallPosition->userUUID, BallPosition->childIndex, BallPosition->dx, BallPosition->dz);
+		BallPosition->userUUID, BallPosition->childIndex, BallPosition->ballPos.x, BallPosition->ballPos.z);
 
 	auto reqUser = mUserManager->GetUserByConnIdx(clientIndex_);
 	auto roomNum = reqUser->GetCurrentRoom();
@@ -394,8 +395,16 @@ void PacketManager::ProcessBallPosition(UINT32 clientIndex_, UINT16 packetSize_,
 
 	UPDATE_BALL_POSITION updateBall;
 	updateBall.childIndex = BallPosition->childIndex;
-	updateBall.dx = BallPosition->dx;
-	updateBall.dz = BallPosition->dz;
+	updateBall.ballPos = reqUser->UpdateBallPosition(BallPosition->ballPos);
+
+	pRoom->SendToAllUser(updateBall.PacketLength, (char*)&updateBall, clientIndex_, false);
+}
+
+void PacketManager::ProcessPlayerTurnNotify(User& user_, UINT16 packetSize_, const std::string noticeTurnMsg)
+{
+	printf("ProcessPlayerTurnNotify UerIndex : %d\n", user_);
+
+
 }
 
 void PacketManager::ProcessRoomChatMessage(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_)
