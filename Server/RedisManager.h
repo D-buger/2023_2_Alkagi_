@@ -124,29 +124,37 @@ private:
 					if (mConn.get(pRequest->UserID, value))
 					{
 						bodyData.Result = (UINT16)ERROR_CODE::NONE;
+						std::cout << pRequest->UserPW << std::endl;
 
 						if (value.compare(pRequest->UserPW) == 0)
 						{
 							bodyData.Result = (UINT16)ERROR_CODE::NONE;
 							CopyUserID(bodyData.UserID, pRequest->UserID);
+
+							RedisTask resTask;
+							resTask.UserIndex = task.UserIndex;
+							resTask.TaskID = RedisTaskID::RESPONSE_LOGIN;
+							resTask.DataSize = sizeof(RedisLoginRes);
+							resTask.pData = new char[resTask.DataSize];
+							CopyMemory(resTask.pData, (char*)&bodyData, resTask.DataSize);
+
+							PushResponse(resTask);
 						}
+						else {
+							// 비번 틀림
+						}
+
 					}
+					else {
+						// Redis에 아이디 없음
 
-					RedisTask resTask;
-					resTask.UserIndex = task.UserIndex;
-					resTask.TaskID = RedisTaskID::RESPONSE_LOGIN;
-					resTask.DataSize = sizeof(RedisLoginRes);
-					resTask.pData = new char[resTask.DataSize];
-					CopyMemory(resTask.pData, (char*)&bodyData, resTask.DataSize);
-
-					PushResponse(resTask);
+					}
 				}
 				else if (task.TaskID == RedisTaskID::REQUEST_NOTICE)
 				{
 					auto pRequest = (RedisNoticeReq*)task.pData;
 
 					mConn.publish("ch_notice", pRequest->Message);
-
 				}
 
 				task.Release();
@@ -208,8 +216,6 @@ private:
 		std::lock_guard<std::mutex> guard(mResLock);
 		mResponseTask.push_back(task_);
 	}
-
-
 
 
 private:

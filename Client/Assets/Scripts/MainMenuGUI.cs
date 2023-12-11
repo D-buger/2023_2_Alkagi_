@@ -9,7 +9,6 @@ public class MainMenuGUI : MonoBehaviour, IPacketReceiver
         Client.Start();
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         Client.TCP.AddPacketReceiver(this);
@@ -24,9 +23,11 @@ public class MainMenuGUI : MonoBehaviour, IPacketReceiver
                 P_LoginRes loginRes = UnsafeCode.ByteArrayToStructure<P_LoginRes>(packet.data);
 
                 string inputName = GameObject.Find("NameInput").GetComponent<InputField>().text;
+                string inputPW = GameObject.Find("PasswordInput").GetComponent<InputField>().text;
 
                 LocalPlayerInfo.ID = loginRes.result;
                 LocalPlayerInfo.Name = inputName;
+                
                 SceneManager.LoadSceneAsync("Scenes/MatchScene", LoadSceneMode.Single);
                 break;
         }
@@ -40,9 +41,10 @@ public class MainMenuGUI : MonoBehaviour, IPacketReceiver
     public void OnJoinButtonClick()
     {
         string inputName = GameObject.Find("NameInput").GetComponent<InputField>().text;
+        string inputPW = GameObject.Find("PasswordInput").GetComponent<InputField>().text;
         P_LoginReq loginReq = default;
         loginReq.userID = inputName;
-        loginReq.userPW = inputName;
+        loginReq.userPW = inputPW;
         Client.TCP.SendPacket2(E_PACKET.LOGIN_REQUEST, loginReq);
     }
 }

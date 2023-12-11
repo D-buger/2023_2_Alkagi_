@@ -1,4 +1,5 @@
-C:\Users\phil0\Desktop\DB\GitHub\2023_2_Alkagi\Server\main.cpp;C:\Users\phil0\Desktop\DB\GitHub\2023_2_Alkagi\Server\obj\Win64\Debug\main.obj
-C:\Users\phil0\Desktop\DB\GitHub\2023_2_Alkagi\Server\Packet.cpp;C:\Users\phil0\Desktop\DB\GitHub\2023_2_Alkagi\Server\obj\Win64\Debug\Packet.obj
-C:\Users\phil0\Desktop\DB\GitHub\2023_2_Alkagi\Server\PacketManager.cpp;C:\Users\phil0\Desktop\DB\GitHub\2023_2_Alkagi\Server\obj\Win64\Debug\PacketManager.obj
-C:\Users\phil0\Desktop\DB\GitHub\2023_2_Alkagi\Server\unity.cpp;C:\Users\phil0\Desktop\DB\GitHub\2023_2_Alkagi\Server\obj\Win64\Debug\unity.obj
+D:\UnityProjects\Alkagi_\Server\main.cpp;D:\UnityProjects\Alkagi_\Server\obj\Win64\Debug\main.obj
+D:\UnityProjects\Alkagi_\Server\Packet.cpp;D:\UnityProjects\Alkagi_\Server\obj\Win64\Debug\Packet.obj
+D:\UnityProjects\Alkagi_\Server\PacketManager.cpp;D:\UnityProjects\Alkagi_\Server\obj\Win64\Debug\PacketManager.obj
+D:\UnityProjects\Alkagi_\Server\unity.cpp;D:\UnityProjects\Alkagi_\Server\obj\Win64\Debug\unity.obj
+D:\UnityProjects\Alkagi_\Server\User.pb.cc;D:\UnityProjects\Alkagi_\Server\obj\Win64\Debug\User.pb.obj

@@ -46,6 +46,8 @@
     <IntDir>obj\Win64\Debug\</IntDir>
     <TargetName>ChatServer</TargetName>
     <TargetExt>.exe</TargetExt>
+    <IncludePath>..\Server\Protobuf\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\Server\Protobuf\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Win64|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -62,12 +64,13 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>..\Server\thirdparty\hiredis;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Server\thirdparty\hiredis;..\Server\Protobuf\include;..\Server\Protobuf\lib;..\Server\Protobuf\bin;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\Server\thirdparty\hiredis\VS-IDE\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\Server\thirdparty\hiredis\VS-IDE\Debug;..\Server\Protobuf\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libprotobufd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Win64|x64'">
@@ -95,6 +98,7 @@
     <ClInclude Include="Npc.h" />
     <ClInclude Include="Packet.h" />
     <ClInclude Include="PacketManager.h" />
+    <ClInclude Include="ProtobufManager.h" />
     <ClInclude Include="RedisManager.h" />
     <ClInclude Include="RedisTaskDefine.h" />
     <ClInclude Include="Room.h" />
@@ -104,6 +108,7 @@
     <ClInclude Include="ServerNetwork\IOCPServer.h" />
     <ClInclude Include="unity.h" />
     <ClInclude Include="User.h" />
+    <ClInclude Include="User.pb.h" />
     <ClInclude Include="UserManager.h" />
   </ItemGroup>
   <ItemGroup>
@@ -111,6 +116,7 @@
     <ClCompile Include="Packet.cpp" />
     <ClCompile Include="PacketManager.cpp" />
     <ClCompile Include="unity.cpp" />
+    <ClCompile Include="User.pb.cc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
