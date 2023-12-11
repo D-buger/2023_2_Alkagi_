@@ -23,6 +23,7 @@ void PacketManager::Init(const UINT32 maxClient_)
 	mRecvFuntionDictionary[(int)PACKET_ID::ROOM_LEAVE_REQUEST] = &PacketManager::ProcessLeaveRoom;
 	mRecvFuntionDictionary[(int)PACKET_ID::ROOM_CHAT_REQUEST] = &PacketManager::ProcessRoomChatMessage;
 	mRecvFuntionDictionary[(int)PACKET_ID::PLAYER_MOVEMENT] = &PacketManager::ProcessPlayerMovement;
+	mRecvFuntionDictionary[(int)PACKET_ID::BALL_POSITION] = &PacketManager::ProcessBallPosition;
 
 	mRecvFuntionDictionary[(int)PACKET_ID::REPLAY_SAVE_REQUEST] = &PacketManager::ProcessSaveReplayRequest;
 	mRecvFuntionDictionary[(int)PACKET_ID::REPLAY_LOAD_REQUEST] = &PacketManager::ProcessLoadReplayRequest;
@@ -343,7 +344,6 @@ void PacketManager::ProcessPlayerMovement(UINT32 clientIndex_, UINT16 packetSize
 		return;
 	}
 
-
 	printf("[ProcessPlayerMovement] userUUID(%lld) dx=%f, dy=%f, rx:%f, ry:%f, rz:%f \n", playerMovement->userUUID,
 		playerMovement->dx, playerMovement->dy, playerMovement->rotation.x, playerMovement->rotation.y, playerMovement->rotation.z);
 
@@ -366,6 +366,37 @@ void PacketManager::ProcessPlayerMovement(UINT32 clientIndex_, UINT16 packetSize
 	pRoom->SendToAllUser(updateMovement.PacketLength, (char*)&updateMovement, clientIndex_, false);
 }
 
+void PacketManager::ProcessBallPosition(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_)
+{
+	UNREFERENCED_PARAMETER(packetSize_);
+	UNREFERENCED_PARAMETER(pPacket_);
+
+	auto BallPosition = reinterpret_cast<BALL_POSITION*>(pPacket_);
+
+	if (BallPosition->userUUID != clientIndex_)
+	{
+		printf("[ProcessPlayerMovement] userUUID(%lld) != clientIndex_(%ld)\n", BallPosition->userUUID, clientIndex_);
+		return;
+	}
+
+	printf("[ProcessPlayerMovement] userUUID(%lld), index=%d dx=%f, dy=%f \n",
+		BallPosition->userUUID, BallPosition->childIndex, BallPosition->dx, BallPosition->dz);
+
+	auto reqUser = mUserManager->GetUserByConnIdx(clientIndex_);
+	auto roomNum = reqUser->GetCurrentRoom();
+
+	auto pRoom = mRoomManager->GetRoomByNumber(roomNum);
+	if (pRoom == nullptr)
+	{
+		printf("[ProcessPlayerMovement] pRoom == nullptr userUUID(%lld), roomNum(%d)\n", BallPosition->userUUID, roomNum);
+		return;
+	}
+
+	UPDATE_BALL_POSITION updateBall;
+	updateBall.childIndex = BallPosition->childIndex;
+	updateBall.dx = BallPosition->dx;
+	updateBall.dz = BallPosition->dz;
+}
 
 void PacketManager::ProcessRoomChatMessage(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_)
 {

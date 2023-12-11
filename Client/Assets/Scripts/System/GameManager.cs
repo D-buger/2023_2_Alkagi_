@@ -12,26 +12,26 @@ public class GameManager : MonoBehaviour
         player1Turn();
     }
 
-    private void Update()
-    {
+    //private void Update()
+    //{
 
-        if (match.PlayerNum == 1)
-        {
-            Debug.Log("∑πµÂ∆¿");
-            Quaternion newRotation = Quaternion.Euler(transform.rotation.eulerAngles.x, 0, transform.rotation.eulerAngles.z);
-            transform.rotation = newRotation;
-        }
-        else if (match.PlayerNum == 2)
-        {
-            Debug.Log("∫Ì∑Á∆¿");
-            Quaternion newRotation = Quaternion.Euler(transform.rotation.eulerAngles.x, 180, transform.rotation.eulerAngles.z);
-            transform.rotation = newRotation;
-        }
-        else
-        {
-            Debug.Log("PlayerNum : " + match.PlayerNum);
-        }
-    }
+    //    if (match.PlayerNum == 1)
+    //    {
+    //        Debug.Log("∑πµÂ∆¿");
+    //        Quaternion newRotation = Quaternion.Euler(transform.rotation.eulerAngles.x, 0, transform.rotation.eulerAngles.z);
+    //        transform.rotation = newRotation;
+    //    }
+    //    else if (match.PlayerNum == 2)
+    //    {
+    //        Debug.Log("∫Ì∑Á∆¿");
+    //        Quaternion newRotation = Quaternion.Euler(transform.rotation.eulerAngles.x, 180, transform.rotation.eulerAngles.z);
+    //        transform.rotation = newRotation;
+    //    }
+    //    else
+    //    {
+    //        Debug.Log("PlayerNum : " + match.PlayerNum);
+    //    }
+    //}
 
     public void player1Turn()
     {

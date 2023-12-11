@@ -20,50 +20,46 @@ public class Drag : MonoBehaviour
 
     private void OnMouseUp()
     {
-        float angle = -1;
-        if (GameManager.allowShoot)
+        if (tag == "Red")
         {
-            if (this.gameObject.tag == "Red" && GameManager.turn % 2 == 1) angle = 0;
-            if (this.gameObject.tag == "Blue" && GameManager.turn % 2 == 0) angle = 180;
+            float angle = 0;
+
+            // 마우스 포지션과 오브젝트 거리 저장
+            Vector3 mousePosition = Input.mousePosition;
+            Vector3 scrSpace = Camera.main.WorldToScreenPoint(transform.position);
+            Vector3 offset = new Vector3(scrSpace.x - mousePosition.x, 0, scrSpace.y - mousePosition.y);
+
+            float distance = Mathf.Sqrt(offset.x * offset.x + offset.z * offset.z); // 벡터의 크기 계산
+
+            if (distance > maxDragDistance)
+            {
+                offset = offset.normalized * maxDragDistance;
+                distance = maxDragDistance;
+            }
+
+            offset /= distance; // 정규화
+
+            if (offset.z > 0)
+                angle += Mathf.Rad2Deg * Mathf.Acos(offset.x);
+            else
+                angle += 360 - Mathf.Rad2Deg * Mathf.Acos(offset.x);
+
+            offset.x = Mathf.Cos(Mathf.Deg2Rad * angle);
+            offset.z = Mathf.Sin(Mathf.Deg2Rad * angle);
+            offset *= distance;
+            offset.y = 3;
+
+            rigidbody.AddForce(offset * hitPower / 2, ForceMode.Impulse);
+
+            StartCoroutine(Shoot());
         }
-
-        if (angle == -1) return;
-
-        // 마우스 포지션과 오브젝트 거리 저장
-        Vector3 mousePosition = Input.mousePosition;
-        Vector3 scrSpace = Camera.main.WorldToScreenPoint(transform.position);
-        Vector3 offset = new Vector3(scrSpace.x - mousePosition.x, 0, scrSpace.y - mousePosition.y);
-
-        float distance = Mathf.Sqrt(offset.x * offset.x + offset.z * offset.z); // 벡터의 크기 계산
-
-        if(distance > maxDragDistance) 
-        {
-            offset = offset.normalized * maxDragDistance;
-            distance = maxDragDistance;
-        }
-
-        offset /= distance; // 정규화
-
-        if (offset.z > 0)
-            angle += Mathf.Rad2Deg * Mathf.Acos(offset.x);
-        else
-            angle += 360 - Mathf.Rad2Deg * Mathf.Acos(offset.x);
-
-        offset.x = Mathf.Cos(Mathf.Deg2Rad * angle);
-        offset.z = Mathf.Sin(Mathf.Deg2Rad * angle);
-        offset *= distance;
-        offset.y = 3;
-
-        rigidbody.AddForce(offset * hitPower / 2,ForceMode.Impulse);
-
-        StartCoroutine(Shoot());
     }
 
     IEnumerator Shoot()
     {
         yield return new WaitForSeconds(0.1f);
 
-        while (rigidbody.velocity.magnitude > 0.5f && transform.position.y >= 0)
+        while (rigidbody.velocity.magnitude > 0.1f && transform.position.y >= 0)
             yield return new WaitForSeconds(0.1f);
 
         if(GameManager.turn % 2 == 1)

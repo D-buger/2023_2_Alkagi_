@@ -22,6 +22,10 @@ public enum E_PACKET
     PLAYER_MOVEMENT,
     UPDATE_PLAYER_MOVEMENT,
 
+    // Ball Position
+    BALL_POSITION,
+    UPDATE_BALL_POSITION,
+
     // Chat
     ROOM_CHAT_REQUEST = 221, // SEND_CHAT_MESSAGE
     ROOM_CHAT_RESPONSE = 222,
@@ -167,6 +171,37 @@ struct P_UpdatePlayerMovement
 
 }
 
+[StructLayout(LayoutKind.Sequential, Size = 20)]
+struct  P_BallPosition
+{
+    [MarshalAs(UnmanagedType.I8)]
+    public long player_id;
+
+    [MarshalAs(UnmanagedType.I4)]
+    public int child_index;
+
+    [MarshalAs(UnmanagedType.R4)]
+    public float dx;
+
+    [MarshalAs(UnmanagedType.R4)]
+    public float dz;
+}
+
+[StructLayout(LayoutKind.Sequential, Size = 20)]
+struct  P_UpdateBallPosition
+{
+    [MarshalAs(UnmanagedType.I8)]
+    public long player_id;
+
+    [MarshalAs(UnmanagedType.I4)]
+    public int child_index;
+
+    [MarshalAs(UnmanagedType.R4)]
+    public float dx;
+
+    [MarshalAs(UnmanagedType.R4)]
+    public float dz;
+}
 
 [StructLayout(LayoutKind.Sequential, Size = 257)]
 struct P_RoomChatRequest

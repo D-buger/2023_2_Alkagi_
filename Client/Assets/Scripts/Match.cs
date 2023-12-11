@@ -12,6 +12,8 @@ public unsafe class Match : MonoBehaviour, IPacketReceiver
 
     public Dictionary<long, Player> Players;
 
+    public GameObject prefabTeamSet;
+
     void Awake()
     {
         PlayerNum = -1;
@@ -94,6 +96,12 @@ public unsafe class Match : MonoBehaviour, IPacketReceiver
                     player.Movement.Move(updateMovement.motion);
                 }
                 break;
+
+            case E_PACKET.UPDATE_BALL_POSITION:
+                P_UpdateBallPosition updateBallPosition = UnsafeCode.ByteArrayToStructure<P_UpdateBallPosition>(packet.data);
+                MoveBall(updateBallPosition.child_index, updateBallPosition.dx, updateBallPosition.dz); 
+                break;
+
             case E_PACKET.REPLAY_LOAD_RESPONSE:
                 P_ReplayLoad replayLoad = UnsafeCode.ByteArrayToStructure<P_ReplayLoad>(packet.data);
                 {
@@ -124,6 +132,9 @@ public unsafe class Match : MonoBehaviour, IPacketReceiver
             //cameraObject.AddComponent<MouseLook>();
             //playerCamera.transform.parent = playerObj.transform;
 
+            //GameObject teamSet = Instantiate(prefabTeamSet);
+            //teamSet.transform.parent = playerObj.transform;
+
             // test code
             /*
             float randomX = Random.Range(-25, 26);
@@ -150,5 +161,10 @@ public unsafe class Match : MonoBehaviour, IPacketReceiver
             Destroy(player.gameObject);
             Players.Remove(id);
         }
+    }
+
+    private void MoveBall(int index, float x, float z)
+    {
+        // 파란색 오브젝트 생성 후 위치에 옮겨준다.
     }
 }
