@@ -117,10 +117,15 @@ private:
 				if (task.TaskID == RedisTaskID::REQUEST_LOGIN)
 				{
 					auto pRequest = (RedisLoginReq*)task.pData;
-					std::cout << pRequest->UserPW << std::endl;
 
-					RedisLoginRes bodyData;
-					bodyData.Result = (UINT16)ERROR_CODE::LOGIN_USER_INVALID_PW;
+					RedisLoginRes bodyData; 
+					CopyUserID(bodyData.UserID, pRequest->UserID);
+
+					RedisTask resTask;
+					resTask.UserIndex = task.UserIndex;
+					resTask.TaskID = RedisTaskID::RESPONSE_LOGIN;
+					resTask.DataSize = sizeof(RedisLoginRes);
+					resTask.pData = new char[resTask.DataSize];
 
 					std::string value;
 					if (mConn.get(pRequest->UserID, value))
@@ -130,26 +135,19 @@ private:
 						if (value.compare(pRequest->UserPW) == 0)
 						{
 							bodyData.Result = (UINT16)ERROR_CODE::NONE;
-							CopyUserID(bodyData.UserID, pRequest->UserID);
-
-							RedisTask resTask;
-							resTask.UserIndex = task.UserIndex;
-							resTask.TaskID = RedisTaskID::RESPONSE_LOGIN;
-							resTask.DataSize = sizeof(RedisLoginRes);
-							resTask.pData = new char[resTask.DataSize];
-							CopyMemory(resTask.pData, (char*)&bodyData, resTask.DataSize);
-
-							PushResponse(resTask);
 						}
 						else {
-							// 비번 틀림
+							bodyData.Result = (UINT16)ERROR_CODE::LOGIN_USER_INVALID_PW;
 						}
 
 					}
 					else {
-						// Redis에 아이디 없음
-
+						bodyData.Result = (UINT16)ERROR_CODE::USER_MGR_INVALID_USER_INDEX;
 					}
+
+					CopyMemory(resTask.pData, (char*)&bodyData, resTask.DataSize);
+
+					PushResponse(resTask);
 				}
 				else if (task.TaskID == RedisTaskID::REQUEST_NOTICE)
 				{

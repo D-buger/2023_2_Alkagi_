@@ -60,6 +60,7 @@ struct RedisLoginRes
 {
 	char UserID[MAX_USER_ID_LEN + 1];
 	UINT16 Result = (UINT16)ERROR_CODE::NONE;
+	UINT16 isSucess = 0;
 };
 
 struct RedisNoticeReq

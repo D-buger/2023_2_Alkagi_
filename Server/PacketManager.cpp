@@ -212,7 +212,6 @@ void PacketManager::ProcessLogon(UINT32 clientIndex_, UINT16 packetSize_, char* 
 	auto pLogonReqPacket = reinterpret_cast<LOGON_REQUEST_PACKET*>(pPacket_);
 
 	auto pUserID = pLogonReqPacket->userID;
-	printf("requested user id = %s\n", pUserID);
 
 	LOGON_RESPONSE_PACKET logonResPacket;
 
@@ -285,17 +284,22 @@ void PacketManager::ProcessLoginDBResult(UINT32 clientIndex_, UINT16 packetSize_
 
 	auto pBody = (RedisLoginRes*)pPacket_;
 
+	LOGIN_RESPONSE_PACKET loginResPacket;
+
 	if (pBody->Result == (UINT16)ERROR_CODE::NONE)
 	{
 		//로그인 완료로 변경한다
 		auto pUser = mUserManager->GetUserByConnIdx(clientIndex_);
 		pUser->SetLogin(pBody->UserID);
+
+		loginResPacket.Result = clientIndex_;
+		loginResPacket.IsSucceed = 1;
+	}
+	else {
+		loginResPacket.Result = pBody->Result;
+		loginResPacket.IsSucceed = 0;
 	}
 
-	LOGIN_RESPONSE_PACKET loginResPacket;
-	//loginResPacket.Result = pBody->Result;
-	// Unity3D 대응용
-	loginResPacket.Result = clientIndex_;
 	SendPacketFunc(clientIndex_, sizeof(LOGIN_RESPONSE_PACKET), (char*)&loginResPacket);
 }
 

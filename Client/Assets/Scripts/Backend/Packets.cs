@@ -71,13 +71,14 @@ struct P_LoginReq
 }
 
 
-[StructLayout(LayoutKind.Sequential, Size = 2)]
+[StructLayout(LayoutKind.Sequential, Size = 4)]
 struct P_LoginRes
 {
-    // UInt16 Result;
     [MarshalAs(UnmanagedType.U2)]
     public ushort result;
 
+    [MarshalAs(UnmanagedType.U2)]
+    public ushort isSucceed;
 }
 
 [StructLayout(LayoutKind.Sequential, Size = 24)]
