@@ -216,9 +216,19 @@ void PacketManager::ProcessLogon(UINT32 clientIndex_, UINT16 packetSize_, char* 
 
 	LOGON_RESPONSE_PACKET logonResPacket;
 
-	if () {
+	RedisLogonReq dbReq;
+	CopyUserID(dbReq.UserID, pLogonReqPacket->userID);
+	CopyMemory(dbReq.UserPW, pLogonReqPacket->userPW, (MAX_USER_PW_LEN + 1));
 
-	}
+	RedisTask task;
+	task.UserIndex = clientIndex_;
+	task.TaskID = RedisTaskID::REQUEST_LOGON;
+	task.DataSize = sizeof(RedisLoginReq);
+	task.pData = new char[task.DataSize];
+	CopyMemory(task.pData, (char*)&dbReq, task.DataSize);
+	mRedisMgr->PushTask(task);
+
+	printf("Redis new user id = %s\n", pUserID);
 }
 
 void PacketManager::ProcessLogin(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_)

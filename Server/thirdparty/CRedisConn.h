@@ -690,45 +690,27 @@ public:
 		return ret;
 	}
 
-	//bool get(const std::string& key, std::byte& value)
-	//{
-	//	if (!_connected || !_redCtx)
-	//	{
-	//		_errStr = _errDes[ERR_NO_CONNECT];
-	//		return false;
-	//	}
+	bool set(const std::string& key, const std::string& value) {
+		if (!_connected || !_redCtx)
+		{
+			_errStr = _errDes[ERR_NO_CONNECT];
+			return false;
+		}
 
-	//	bool ret = false;
-	//	redisReply* reply = redisCmd("GET %s", key.c_str());
+		bool ret = false;
+		redisReply* reply = redisCmd("SET %s %s", key.c_str(), value.c_str());
 
-	//	if (_getError(reply))
-	//	{
-	//		ret = false;
-	//	}
-	//	else
-	//	{
-	//		if (REDIS_REPLY_NIL == reply->type)
-	//		{
-	//			_errStr = std::string(_errDes[ERR_NO_KEY]) + " or " + _errDes[ERR_NO_FIELD];
-	//			ret = false;
-	//		}
-	//		else
-	//		{
-	//			value = reply->str;
-	//			ret = true;
-	//		}
-	//	}
-	//	if (NULL != reply)
-	//	{
-	//		freeReplyObject(reply);
-	//	}
-	//	else
-	//	{
-	//	}
+		if (_getError(reply))
+		{
+			ret = false;
+		}
+		else
+		{
+			ret = true;
+		}
 
-	//	return ret;
-	//}
-
+		return ret;
+	}
 	
 	//////////////////////////////   hash 的方法 //////////////////////////////////////
 

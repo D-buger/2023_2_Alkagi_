@@ -157,6 +157,17 @@ private:
 
 					mConn.publish("ch_notice", pRequest->Message);
 				}
+				else if (task.TaskID == RedisTaskID::REQUEST_LOGON) {
+					auto pRequest = (RedisLogonReq*)task.pData;
+					mConn.set(pRequest->UserID, pRequest->UserPW);
+
+					RedisTask resTask;
+					resTask.UserIndex = task.UserIndex;
+					resTask.TaskID = RedisTaskID::RESPONSE_LOGON;
+					resTask.DataSize = sizeof(RedisLogonRes);
+					resTask.pData = new char[resTask.DataSize];
+					PushResponse(resTask);
+				}
 
 				task.Release();
 			}
