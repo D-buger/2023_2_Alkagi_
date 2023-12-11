@@ -37,8 +37,6 @@ public class MainMenuGUI : MonoBehaviour, IPacketReceiver
             case E_PACKET.LOGIN_RESPONSE:
                 P_LoginRes loginRes = UnsafeCode.ByteArrayToStructure<P_LoginRes>(packet.data);
 
-                Debug.Log(loginRes.isSucceed);
-
                 if (loginRes.isSucceed > 0)
                 {
                     LocalPlayerInfo.ID = loginRes.result;
@@ -48,8 +46,6 @@ public class MainMenuGUI : MonoBehaviour, IPacketReceiver
                 }
                 else
                 {
-                    Debug.Log(loginRes.result);
-
                     if ((ERROR_CODE)loginRes.result == ERROR_CODE.USER_MGR_INVALID_USER_INDEX)
                     {
                         warnText.text = "없는 아이디입니다";
@@ -64,7 +60,14 @@ public class MainMenuGUI : MonoBehaviour, IPacketReceiver
             case E_PACKET.LOGON_RESPONSE:
                 P_LogonRes logonRes = UnsafeCode.ByteArrayToStructure<P_LogonRes>(packet.data);
 
-                Debug.Log(logonRes.result);
+                if(logonRes.result == 0)
+                {
+                    warnText.text = "회원가입 성공";
+                }
+                else
+                {
+                    warnText.text = "회원가입 실패";
+                }
 
                 break;
         }

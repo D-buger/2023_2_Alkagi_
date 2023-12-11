@@ -16,6 +16,7 @@ void PacketManager::Init(const UINT32 maxClient_)
 	mRecvFuntionDictionary[(int)PACKET_ID::SYS_USER_DISCONNECT] = &PacketManager::ProcessUserDisConnect;
 
 	mRecvFuntionDictionary[(int)PACKET_ID::LOGON_REQUEST] = &PacketManager::ProcessLogon;
+	mRecvFuntionDictionary[(int)RedisTaskID::RESPONSE_LOGON] = &PacketManager::ProcessLogonDBResult;
 
 	mRecvFuntionDictionary[(int)PACKET_ID::LOGIN_REQUEST] = &PacketManager::ProcessLogin;
 	mRecvFuntionDictionary[(int)RedisTaskID::RESPONSE_LOGIN] = &PacketManager::ProcessLoginDBResult;
@@ -222,12 +223,24 @@ void PacketManager::ProcessLogon(UINT32 clientIndex_, UINT16 packetSize_, char* 
 	RedisTask task;
 	task.UserIndex = clientIndex_;
 	task.TaskID = RedisTaskID::REQUEST_LOGON;
-	task.DataSize = sizeof(RedisLoginReq);
+	task.DataSize = sizeof(RedisLogonReq);
 	task.pData = new char[task.DataSize];
 	CopyMemory(task.pData, (char*)&dbReq, task.DataSize);
 	mRedisMgr->PushTask(task);
+}
 
-	printf("Redis new user id = %s\n", pUserID);
+void PacketManager::ProcessLogonDBResult(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_)
+{
+	printf("ProcessLogonDBResult. UserIndex: %d\n", clientIndex_);
+
+	auto pBody = (RedisLogonRes*)pPacket_;
+
+	LOGON_RESPONSE_PACKET logonResPacket;
+	logonResPacket.Result = pBody->Result;
+
+
+
+	SendPacketFunc(clientIndex_, sizeof(LOGON_RESPONSE_PACKET), (char*)&logonResPacket);
 }
 
 void PacketManager::ProcessLogin(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_)

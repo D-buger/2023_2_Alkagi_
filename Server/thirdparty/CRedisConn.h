@@ -698,25 +698,17 @@ public:
 		}
 
 		bool ret = false;
-		redisReply* reply = redisCmd("GET %s", key.c_str());
+		redisReply* reply = redisCmd("SET %s %s", key.c_str(), value.c_str());
 
-		if (!_getError(reply))
+		if (_getError(reply))
 		{
-			_errStr = _errDes[E_ERROR_NO::ERR_INDEX];
 			ret = false;
 		}
-		else {
-			redisReply* reply = redisCmd("SET %s %s", key.c_str(), value.c_str());
-
-			if (_getError(reply))
-			{
-				ret = false;
-			}
-			else
-			{
-				ret = true;
-			}
+		else
+		{
+			ret = true;
 		}
+		
 
 		return ret;
 	}

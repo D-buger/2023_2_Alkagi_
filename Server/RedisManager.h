@@ -157,13 +157,33 @@ private:
 				}
 				else if (task.TaskID == RedisTaskID::REQUEST_LOGON) {
 					auto pRequest = (RedisLogonReq*)task.pData;
-					mConn.set(pRequest->UserID, pRequest->UserPW);
+
+					RedisLogonRes bodyData;
+					CopyUserID(bodyData.UserID, pRequest->UserID);
+
+					std::string str;
+					mConn.get(pRequest->UserID, str);
+					if (str != "") {
+						bodyData.Result = (UINT16)ERROR_CODE::USER_MGR_INVALID_USER_UNIQUEID;
+					}
+					else {
+						if (mConn.set(pRequest->UserID, pRequest->UserPW))
+						{
+							bodyData.Result = (UINT16)ERROR_CODE::NONE;
+						}
+						else {
+							bodyData.Result = (UINT16)ERROR_CODE::USER_MGR_INVALID_USER_UNIQUEID;
+						}
+					}
 
 					RedisTask resTask;
 					resTask.UserIndex = task.UserIndex;
 					resTask.TaskID = RedisTaskID::RESPONSE_LOGON;
 					resTask.DataSize = sizeof(RedisLogonRes);
 					resTask.pData = new char[resTask.DataSize];
+
+					CopyMemory(resTask.pData, (char*)&bodyData, resTask.DataSize);
+
 					PushResponse(resTask);
 				}
 
