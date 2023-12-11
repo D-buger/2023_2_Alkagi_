@@ -38,6 +38,16 @@ struct RedisTask
 
 #pragma pack(push,1)
 
+struct RedisLogonReq {
+	char UserID[MAX_USER_ID_LEN + 1];
+	char UserPW[MAX_USER_PW_LEN + 1];
+};
+
+struct RedisLogonRes {
+	char UserID[MAX_USER_ID_LEN + 1];
+	UINT16 Result = (UINT16)ERROR_CODE::NONE;
+};
+
 struct RedisLoginReq
 {
 	char UserID[MAX_USER_ID_LEN + 1];

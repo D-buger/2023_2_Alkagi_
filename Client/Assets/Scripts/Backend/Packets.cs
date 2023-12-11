@@ -3,8 +3,11 @@ using UnityEngine;
 
 public enum E_PACKET
 {
-    LOGIN_REQUEST = 201, // LOGIN_REQ = 201,
-    LOGIN_RESPONSE = 202, // LOGIN_RES = 202,
+    LOGON_REQUEST = 200,
+    LOGON_RESPONSE = 201,
+
+    LOGIN_REQUEST = 202, // LOGIN_REQ = 201,
+    LOGIN_RESPONSE = 203, // LOGIN_RES = 202,
 
     // Enter
     ROOM_ENTER_REQUEST = 206, // PLAYER_JOINED
@@ -37,6 +40,25 @@ struct P_PlayerName
 {
     [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
     public string userName;
+}
+
+[StructLayout(LayoutKind.Sequential, Size = 66)]
+struct P_LogonReq
+{
+    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 33)]
+    public string userID;
+    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 33)]
+    public string userPW;
+}
+
+
+[StructLayout(LayoutKind.Sequential, Size = 2)]
+struct P_LogonRes
+{
+    // UInt16 Result;
+    [MarshalAs(UnmanagedType.U2)]
+    public ushort result;
+
 }
 
 [StructLayout(LayoutKind.Sequential, Size = 66)]

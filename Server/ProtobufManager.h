@@ -1,17 +1,23 @@
 #pragma once
 
-//#include "Protobuf/User.pb.h"
+#include "..\Server\User.pb.h"
 
-class User {
+class Proto {
 private:
 	
 
 public:
-	User() {
+	Proto() {
 		//GOOGLE_PROTOBUF_VERIFY_VERSION;
 	}
-	~User() {}
+	~Proto() {}
 
-	void Write();
-	void Read();
+	tutorial::User char2Proto(char* data_) {
+		tutorial::User user;
+		user.ParseFromString(data_);
+		return user;
+	}
+	const char* Proto2char(tutorial::User data_) {
+		return (data_.SerializeAsString().c_str());
+	}
 };

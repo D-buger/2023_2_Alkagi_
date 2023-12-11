@@ -4,6 +4,7 @@
 //#include "ErrorCode.h"
 
 //#include "../thirdparty/CRedisConn.h"
+//#include "ProtobufManager.h"
 #include "thirdparty/CRedisConnEx.h"
 #include <vector>
 #include <deque>
@@ -116,6 +117,7 @@ private:
 				if (task.TaskID == RedisTaskID::REQUEST_LOGIN)
 				{
 					auto pRequest = (RedisLoginReq*)task.pData;
+					std::cout << pRequest->UserPW << std::endl;
 
 					RedisLoginRes bodyData;
 					bodyData.Result = (UINT16)ERROR_CODE::LOGIN_USER_INVALID_PW;
@@ -124,7 +126,6 @@ private:
 					if (mConn.get(pRequest->UserID, value))
 					{
 						bodyData.Result = (UINT16)ERROR_CODE::NONE;
-						std::cout << pRequest->UserPW << std::endl;
 
 						if (value.compare(pRequest->UserPW) == 0)
 						{

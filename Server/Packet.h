@@ -54,9 +54,12 @@ enum class  PACKET_ID : UINT16
 	//DB
 	DB_END = 199,
 
+	LOGON_REQUEST = 200,
+	LOGON_RESPONSE = 201,
+
 	//Client
-	LOGIN_REQUEST = 201,
-	LOGIN_RESPONSE = 202,
+	LOGIN_REQUEST = 202,
+	LOGIN_RESPONSE = 203,
 
 	// Enter
 	ROOM_ENTER_REQUEST = 206,
@@ -96,9 +99,28 @@ struct PACKET_HEADER
 };
 const UINT32 PACKET_HEADER_LENGTH = sizeof(PACKET_HEADER);
 
-//- 로그인 요청
+//- 회원가입 요청
 const int MAX_USER_ID_LEN = 32;
 const int MAX_USER_PW_LEN = 32;
+
+struct LOGON_REQUEST_PACKET : public PACKET_HEADER
+{
+	char userID[MAX_USER_ID_LEN + 1];
+	char userPW[MAX_USER_PW_LEN + 1];
+
+	LOGON_REQUEST_PACKET() : userID{ 0, }, PACKET_HEADER(sizeof(*this), PACKET_ID::LOGON_REQUEST) {}
+};
+const size_t LOGON_REQUEST_PACKET_SIZE = sizeof(LOGON_REQUEST_PACKET);
+
+
+struct LOGON_RESPONSE_PACKET : public PACKET_HEADER
+{
+	UINT16 Result;
+
+	LOGON_RESPONSE_PACKET() : Result{ 0 }, PACKET_HEADER(sizeof(*this), PACKET_ID::LOGON_RESPONSE) {}
+};
+
+//- 로그인 요청
 
 struct LOGIN_REQUEST_PACKET : public PACKET_HEADER
 {

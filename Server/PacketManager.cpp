@@ -15,6 +15,8 @@ void PacketManager::Init(const UINT32 maxClient_)
 	mRecvFuntionDictionary[(int)PACKET_ID::SYS_USER_CONNECT] = &PacketManager::ProcessUserConnect;
 	mRecvFuntionDictionary[(int)PACKET_ID::SYS_USER_DISCONNECT] = &PacketManager::ProcessUserDisConnect;
 
+	mRecvFuntionDictionary[(int)PACKET_ID::LOGON_REQUEST] = &PacketManager::ProcessLogon;
+
 	mRecvFuntionDictionary[(int)PACKET_ID::LOGIN_REQUEST] = &PacketManager::ProcessLogin;
 	mRecvFuntionDictionary[(int)RedisTaskID::RESPONSE_LOGIN] = &PacketManager::ProcessLoginDBResult;
 	mRecvFuntionDictionary[(int)RedisTaskID::RESPONSE_NOTICE] = &PacketManager::ProcessNoticeDBResult;
@@ -198,6 +200,25 @@ void PacketManager::ProcessUserDisConnect(UINT32 clientIndex_, UINT16 packetSize
 {
 	printf("[ProcessUserDisConnect] clientIndex: %d\n", clientIndex_);
 	ClearConnectionInfo(clientIndex_);
+}
+
+void PacketManager::ProcessLogon(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_)
+{
+	if (LOGON_REQUEST_PACKET_SIZE != packetSize_)
+	{
+		return;
+	}
+
+	auto pLogonReqPacket = reinterpret_cast<LOGON_REQUEST_PACKET*>(pPacket_);
+
+	auto pUserID = pLogonReqPacket->userID;
+	printf("requested user id = %s\n", pUserID);
+
+	LOGON_RESPONSE_PACKET logonResPacket;
+
+	if () {
+
+	}
 }
 
 void PacketManager::ProcessLogin(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_)
