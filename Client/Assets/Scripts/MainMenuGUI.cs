@@ -42,7 +42,7 @@ public class MainMenuGUI : MonoBehaviour, IPacketReceiver
                     LocalPlayerInfo.ID = loginRes.result;
                     LocalPlayerInfo.Name = idInput.text;
 
-                    SceneManager.LoadSceneAsync("Scenes/TestScene", LoadSceneMode.Single);
+                    SceneManager.LoadSceneAsync("Scenes/MatchScene", LoadSceneMode.Single);
                 }
                 else
                 {
