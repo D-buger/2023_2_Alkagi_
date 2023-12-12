@@ -2,7 +2,7 @@
 
 #include "..\Server\User.pb.h"
 
-class Proto {
+static class Proto {
 private:
 	
 

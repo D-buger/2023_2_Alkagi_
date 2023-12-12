@@ -650,6 +650,24 @@ public:
 
 		return ret;
 	}
+
+	int size() {
+		if (!_connected || !_redCtx)
+		{
+			_errStr = _errDes[ERR_NO_CONNECT];
+			return false;
+		}
+
+		redisReply* reply = redisCmd("dbsize");
+
+		if (_getError(reply))
+		{
+			return -1;
+		}
+		else {
+			return reply->integer;
+		}
+	}
 	
 	bool get(const std::string& key, std::string& value)
 	{

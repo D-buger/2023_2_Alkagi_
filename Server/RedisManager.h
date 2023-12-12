@@ -4,7 +4,7 @@
 //#include "ErrorCode.h"
 
 //#include "../thirdparty/CRedisConn.h"
-//#include "ProtobufManager.h"
+#include "ProtobufManager.h"
 #include "thirdparty/CRedisConnEx.h"
 #include <vector>
 #include <deque>
@@ -130,9 +130,8 @@ private:
 					std::string value;
 					if (mConn.get(pRequest->UserID, value))
 					{
-						bodyData.Result = (UINT16)ERROR_CODE::NONE;
-
-						if (value.compare(pRequest->UserPW) == 0)
+					    tutorial::User user = Proto::char2Proto(value);
+						if (user.pw().compare(pRequest->UserPW) == 0)
 						{
 							bodyData.Result = (UINT16)ERROR_CODE::NONE;
 						}
@@ -167,7 +166,15 @@ private:
 						bodyData.Result = (UINT16)ERROR_CODE::USER_MGR_INVALID_USER_UNIQUEID;
 					}
 					else {
-						if (mConn.set(pRequest->UserID, pRequest->UserPW))
+						tutorial::User user;
+						user.set_uid(mConn.size() + 1);
+						user.set_id(pRequest->UserID);
+						user.set_nick(pRequest->UserID);
+						user.set_pw(pRequest->UserPW);
+						user.set_gamenum(0);
+						user.set_winnum(0);
+
+						if (mConn.set(pRequest->UserID, Proto::Proto2char(user)))
 						{
 							bodyData.Result = (UINT16)ERROR_CODE::NONE;
 						}
