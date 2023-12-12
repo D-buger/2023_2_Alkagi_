@@ -27,8 +27,8 @@ void PacketManager::Init(const UINT32 maxClient_)
 	mRecvFuntionDictionary[(int)PACKET_ID::ROOM_CHAT_REQUEST] = &PacketManager::ProcessRoomChatMessage;
 	mRecvFuntionDictionary[(int)PACKET_ID::PLAYER_MOVEMENT] = &PacketManager::ProcessPlayerMovement;
 
-	mRecvFuntionDictionary[(int)PACKET_ID::REPLAY_SAVE_REQUEST] = &PacketManager::ProcessSaveReplayRequest;
-	mRecvFuntionDictionary[(int)PACKET_ID::REPLAY_LOAD_REQUEST] = &PacketManager::ProcessLoadReplayRequest;
+	mRecvFuntionDictionary[(int)PACKET_ID::USER_DATA_SAVE] = &PacketManager::ProcessSaveUserDataRequest;
+	mRecvFuntionDictionary[(int)PACKET_ID::USER_DATA_LOAD_REQUEST] = &PacketManager::ProcessLoadUserDataRequest;
 
 	CreateCompent(maxClient_);
 
@@ -459,32 +459,31 @@ void PacketManager::ProcessRoomChatMessage(UINT32 clientIndex_, UINT16 packetSiz
 }
 
 
-void PacketManager::ProcessSaveReplayRequest(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_)
+void PacketManager::ProcessSaveUserDataRequest(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_)
 {
 	UNREFERENCED_PARAMETER(packetSize_);
 
-	auto pSaveReplayReqPacket = reinterpret_cast<REPLAY_SAVE_REQUEST_PACKET*>(pPacket_);
+	auto pSaveDataReqPacket = reinterpret_cast<USER_DATA_SAVE_REQUEST_PACKET*>(pPacket_);
 
-	std::cout << std::endl << pSaveReplayReqPacket->Message << std::endl;
+	//std::cout << std::endl << pSaveReplayReqPacket->Message << std::endl;
 }
 
-void PacketManager::ProcessLoadReplayRequest(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_)
+void PacketManager::ProcessLoadUserDataRequest(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_)
 {
 	UNREFERENCED_PARAMETER(packetSize_);
 
-	auto pLoadReplayReqPacket = reinterpret_cast<REPLAY_LOAD_REQUEST_PACKET*>(pPacket_);
+	auto pLoadDataReqPacket = reinterpret_cast<USER_DATA_LOAD_REQUEST_PACKET*>(pPacket_);
 
 	auto reqUser = mUserManager->GetUserByConnIdx(clientIndex_);
 	auto roomNum = reqUser->GetCurrentRoom();
 
 	auto pRoom = mRoomManager->GetRoomByNumber(roomNum);
 
-	REPLAY_LOAD_DATA_PACKET replayLoadRequestPacket;
-	StringCbCopyA(replayLoadRequestPacket.Message, sizeof(replayLoadRequestPacket.Message), "Replay Datas");
+	USER_DATA_LOAD_RESPONSE_PACKET userDataResponse;
+	//StringCbCopyA(replayLoadRequestPacket.Message, sizeof(replayLoadRequestPacket.Message), "Replay Datas");
+	//std::cout << "requested replay id : " << pLoadReplayReqPacket->playID << " " << replayLoadRequestPacket.Message;
 
-	std::cout << "requested replay id : " << pLoadReplayReqPacket->playID << " " << replayLoadRequestPacket.Message;
-
-	SendPacketFunc(clientIndex_, sizeof(REPLAY_LOAD_DATA_PACKET), (char*)&replayLoadRequestPacket);
+	SendPacketFunc(clientIndex_, sizeof(USER_DATA_LOAD_RESPONSE_PACKET), (char*)&userDataResponse);
 }
 
 void PacketManager::RedisReqNotice(User& user, const std::string noticeMsg)

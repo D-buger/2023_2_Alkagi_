@@ -61,8 +61,8 @@ private:
 	void ProcessPlayerMovement(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_);
 	void ProcessRoomChatMessage(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_);
 
-	void ProcessSaveReplayRequest(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_);
-	void ProcessLoadReplayRequest(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_);
+	void ProcessSaveUserDataRequest(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_);
+	void ProcessLoadUserDataRequest(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_);
 
 	void PacketManager::RedisReqNotice(User& user, const std::string noticeMsg);
 

@@ -7,17 +7,15 @@ private:
 	
 
 public:
-	Proto() {
-		//GOOGLE_PROTOBUF_VERIFY_VERSION;
-	}
+	Proto() {}
 	~Proto() {}
 
-	tutorial::User char2Proto(char* data_) {
+	static tutorial::User char2Proto(std::string data_) {
 		tutorial::User user;
 		user.ParseFromString(data_);
 		return user;
 	}
-	const char* Proto2char(tutorial::User data_) {
-		return (data_.SerializeAsString().c_str());
+	static std::string Proto2char(tutorial::User data_) {
+		return (data_.SerializeAsString());
 	}
 };
