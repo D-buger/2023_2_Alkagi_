@@ -15,6 +15,9 @@ void PacketManager::Init(const UINT32 maxClient_)
 	mRecvFuntionDictionary[(int)PACKET_ID::SYS_USER_CONNECT] = &PacketManager::ProcessUserConnect;
 	mRecvFuntionDictionary[(int)PACKET_ID::SYS_USER_DISCONNECT] = &PacketManager::ProcessUserDisConnect;
 
+	mRecvFuntionDictionary[(int)PACKET_ID::LOGON_REQUEST] = &PacketManager::ProcessLogon;
+	mRecvFuntionDictionary[(int)RedisTaskID::RESPONSE_LOGON] = &PacketManager::ProcessLogonDBResult;
+
 	mRecvFuntionDictionary[(int)PACKET_ID::LOGIN_REQUEST] = &PacketManager::ProcessLogin;
 	mRecvFuntionDictionary[(int)RedisTaskID::RESPONSE_LOGIN] = &PacketManager::ProcessLoginDBResult;
 	mRecvFuntionDictionary[(int)RedisTaskID::RESPONSE_NOTICE] = &PacketManager::ProcessNoticeDBResult;
@@ -25,8 +28,9 @@ void PacketManager::Init(const UINT32 maxClient_)
 	mRecvFuntionDictionary[(int)PACKET_ID::PLAYER_MOVEMENT] = &PacketManager::ProcessPlayerMovement;
 	mRecvFuntionDictionary[(int)PACKET_ID::BALL_POSITION] = &PacketManager::ProcessBallPosition;
 
-	mRecvFuntionDictionary[(int)PACKET_ID::REPLAY_SAVE_REQUEST] = &PacketManager::ProcessSaveReplayRequest;
-	mRecvFuntionDictionary[(int)PACKET_ID::REPLAY_LOAD_REQUEST] = &PacketManager::ProcessLoadReplayRequest;
+	mRecvFuntionDictionary[(int)PACKET_ID::USER_DATA_SAVE] = &PacketManager::ProcessSaveUserDataRequest;
+	mRecvFuntionDictionary[(int)PACKET_ID::USER_DATA_LOAD_REQUEST] = &PacketManager::ProcessLoadUserDataRequest;
+	mRecvFuntionDictionary[(int)RedisTaskID::RESPONSE_DATA] = &PacketManager::ProcessLoadUserDataDBResult;
 
 	CreateCompent(maxClient_);
 
@@ -201,6 +205,44 @@ void PacketManager::ProcessUserDisConnect(UINT32 clientIndex_, UINT16 packetSize
 	ClearConnectionInfo(clientIndex_);
 }
 
+void PacketManager::ProcessLogon(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_)
+{
+	if (LOGON_REQUEST_PACKET_SIZE != packetSize_)
+	{
+		return;
+	}
+
+	auto pLogonReqPacket = reinterpret_cast<LOGON_REQUEST_PACKET*>(pPacket_);
+
+	auto pUserID = pLogonReqPacket->userID;
+
+	LOGON_RESPONSE_PACKET logonResPacket;
+
+	RedisLogonReq dbReq;
+	CopyUserID(dbReq.UserID, pLogonReqPacket->userID);
+	CopyMemory(dbReq.UserPW, pLogonReqPacket->userPW, (MAX_USER_PW_LEN + 1));
+
+	RedisTask task;
+	task.UserIndex = clientIndex_;
+	task.TaskID = RedisTaskID::REQUEST_LOGON;
+	task.DataSize = sizeof(RedisLogonReq);
+	task.pData = new char[task.DataSize];
+	CopyMemory(task.pData, (char*)&dbReq, task.DataSize);
+	mRedisMgr->PushTask(task);
+}
+
+void PacketManager::ProcessLogonDBResult(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_)
+{
+	printf("ProcessLogonDBResult. UserIndex: %d\n", clientIndex_);
+
+	auto pBody = (RedisLogonRes*)pPacket_;
+
+	LOGON_RESPONSE_PACKET logonResPacket;
+	logonResPacket.Result = pBody->Result;
+
+	SendPacketFunc(clientIndex_, sizeof(LOGON_RESPONSE_PACKET), (char*)&logonResPacket);
+}
+
 void PacketManager::ProcessLogin(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_)
 {
 	if (LOGIN_REQUEST_PACKET_SIZE != packetSize_)
@@ -255,17 +297,22 @@ void PacketManager::ProcessLoginDBResult(UINT32 clientIndex_, UINT16 packetSize_
 
 	auto pBody = (RedisLoginRes*)pPacket_;
 
+	LOGIN_RESPONSE_PACKET loginResPacket;
+
 	if (pBody->Result == (UINT16)ERROR_CODE::NONE)
 	{
 		//로그인 완료로 변경한다
 		auto pUser = mUserManager->GetUserByConnIdx(clientIndex_);
 		pUser->SetLogin(pBody->UserID);
+
+		loginResPacket.Result = clientIndex_;
+		loginResPacket.IsSucceed = 1;
+	}
+	else {
+		loginResPacket.Result = pBody->Result;
+		loginResPacket.IsSucceed = 0;
 	}
 
-	LOGIN_RESPONSE_PACKET loginResPacket;
-	//loginResPacket.Result = pBody->Result;
-	// Unity3D 대응용
-	loginResPacket.Result = clientIndex_;
 	SendPacketFunc(clientIndex_, sizeof(LOGIN_RESPONSE_PACKET), (char*)&loginResPacket);
 }
 
@@ -448,32 +495,45 @@ void PacketManager::ProcessRoomChatMessage(UINT32 clientIndex_, UINT16 packetSiz
 }
 
 
-void PacketManager::ProcessSaveReplayRequest(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_)
+void PacketManager::ProcessSaveUserDataRequest(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_)
 {
 	UNREFERENCED_PARAMETER(packetSize_);
 
-	auto pSaveReplayReqPacket = reinterpret_cast<REPLAY_SAVE_REQUEST_PACKET*>(pPacket_);
+	auto pSaveDataReqPacket = reinterpret_cast<USER_DATA_SAVE_REQUEST_PACKET*>(pPacket_);
 
-	std::cout << std::endl << pSaveReplayReqPacket->Message << std::endl;
+	//std::cout << std::endl << pSaveReplayReqPacket->Message << std::endl;
 }
 
-void PacketManager::ProcessLoadReplayRequest(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_)
+void PacketManager::ProcessLoadUserDataRequest(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_)
 {
 	UNREFERENCED_PARAMETER(packetSize_);
 
-	auto pLoadReplayReqPacket = reinterpret_cast<REPLAY_LOAD_REQUEST_PACKET*>(pPacket_);
-
 	auto reqUser = mUserManager->GetUserByConnIdx(clientIndex_);
-	auto roomNum = reqUser->GetCurrentRoom();
 
-	auto pRoom = mRoomManager->GetRoomByNumber(roomNum);
+	RedisDataReq dataReq;
+	CopyUserID(dataReq.UserID, reqUser->GetUserId());
 
-	REPLAY_LOAD_DATA_PACKET replayLoadRequestPacket;
-	StringCbCopyA(replayLoadRequestPacket.Message, sizeof(replayLoadRequestPacket.Message), "Replay Datas");
+	RedisTask task;
+	task.UserIndex = clientIndex_;
+	task.TaskID = RedisTaskID::REQUEST_DATA;
+	task.DataSize = sizeof(RedisDataReq);
+	task.pData = new char[task.DataSize];
+	CopyMemory(task.pData, (char*)&dataReq, task.DataSize);
+	mRedisMgr->PushTask(task);
+}
 
-	std::cout << "requested replay id : " << pLoadReplayReqPacket->playID << " " << replayLoadRequestPacket.Message;
+void PacketManager::ProcessLoadUserDataDBResult(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_)
+{
+	UNREFERENCED_PARAMETER(packetSize_);
 
-	SendPacketFunc(clientIndex_, sizeof(REPLAY_LOAD_DATA_PACKET), (char*)&replayLoadRequestPacket);
+	auto pBody = (RedisDataRes*)pPacket_;
+
+	USER_DATA_LOAD_RESPONSE_PACKET userDataResponse;
+	StringCbCopyA(userDataResponse.Data, sizeof(userDataResponse.Data), pBody->Message);
+
+	std::cout << "[user data send] id : " << Proto::char2Proto(userDataResponse.Data).id() << std::endl;
+
+	SendPacketFunc(clientIndex_, sizeof(USER_DATA_LOAD_RESPONSE_PACKET), (char*)&userDataResponse);
 }
 
 void PacketManager::RedisReqNotice(User& user, const std::string noticeMsg)

@@ -1,17 +1,31 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEditor.PackageManager;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MainMenuGUI : MonoBehaviour, IPacketReceiver
 {
+    Text infoText;
+    Text warnText;
+    InputField idInput;
+    InputField pwInput;
+    bool isLogin = true;
+
     void Awake()
     {
         Client.Start();
     }
 
-    // Start is called before the first frame update
     void Start()
     {
+        idInput = GameObject.Find("NameInput").GetComponent<InputField>();
+        pwInput = GameObject.Find("PasswordInput").GetComponent<InputField>();
+        infoText = GameObject.Find("InfoText").GetComponent<Text>();
+        warnText = GameObject.Find("WarnText").GetComponent<Text>();
+        isLogin = true;
+        ChangeText();
+
         Client.TCP.AddPacketReceiver(this);
     }
 
@@ -23,11 +37,38 @@ public class MainMenuGUI : MonoBehaviour, IPacketReceiver
             case E_PACKET.LOGIN_RESPONSE:
                 P_LoginRes loginRes = UnsafeCode.ByteArrayToStructure<P_LoginRes>(packet.data);
 
-                string inputName = GameObject.Find("NameInput").GetComponent<InputField>().text;
+                if (loginRes.isSucceed > 0)
+                {
+                    LocalPlayerInfo.ID = loginRes.result;
+                    LocalPlayerInfo.Name = idInput.text;
 
-                LocalPlayerInfo.ID = loginRes.result;
-                LocalPlayerInfo.Name = inputName;
-                SceneManager.LoadSceneAsync("Scenes/MatchScene", LoadSceneMode.Single);
+                    SceneManager.LoadSceneAsync("Scenes/TestScene", LoadSceneMode.Single);
+                }
+                else
+                {
+                    if ((ERROR_CODE)loginRes.result == ERROR_CODE.USER_MGR_INVALID_USER_INDEX)
+                    {
+                        warnText.text = "없는 아이디입니다";
+                    }
+                    else if ((ERROR_CODE)loginRes.result == ERROR_CODE.LOGIN_USER_INVALID_PW)
+                    {
+                        warnText.text = "비밀번호가 다릅니다";
+                    }
+                }
+
+                break;
+            case E_PACKET.LOGON_RESPONSE:
+                P_LogonRes logonRes = UnsafeCode.ByteArrayToStructure<P_LogonRes>(packet.data);
+
+                if(logonRes.result == 0)
+                {
+                    warnText.text = "회원가입 성공";
+                }
+                else
+                {
+                    warnText.text = "회원가입 실패";
+                }
+
                 break;
         }
     }
@@ -39,10 +80,44 @@ public class MainMenuGUI : MonoBehaviour, IPacketReceiver
 
     public void OnJoinButtonClick()
     {
-        string inputName = GameObject.Find("NameInput").GetComponent<InputField>().text;
-        P_LoginReq loginReq = default;
-        loginReq.userID = inputName;
-        loginReq.userPW = inputName;
-        Client.TCP.SendPacket2(E_PACKET.LOGIN_REQUEST, loginReq);
+        if (isLogin)
+        {
+            //로그인
+            P_LoginReq loginReq = default;
+            loginReq.userID = idInput.text;
+            loginReq.userPW = pwInput.text;
+            Client.TCP.SendPacket2(E_PACKET.LOGIN_REQUEST, loginReq);
+        }
+        else
+        {
+            //회원가입
+            P_LogonReq logonReq = default;
+            logonReq.userID = idInput.text;
+            logonReq.userPW = pwInput.text;
+            Client.TCP.SendPacket2(E_PACKET.LOGON_REQUEST, logonReq);
+        }
+    }
+
+    public void OnChangeButtonClick()
+    {
+        isLogin = !isLogin;
+        ChangeText();
+    }
+
+    private void ChangeText()
+    {
+        warnText.text = "";
+        if (isLogin)
+        {
+            infoText.text = "로그인";
+            idInput.text = "";
+            pwInput.text = "";
+        }
+        else
+        {
+            infoText.text = "회원가입";
+            idInput.text = "";
+            pwInput.text = "";
+        }
     }
 }

@@ -49,6 +49,9 @@ private:
 	void ProcessUserConnect(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_);
 	void ProcessUserDisConnect(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_);
 
+	void ProcessLogon(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_);
+	void ProcessLogonDBResult(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_);
+
 	void ProcessLogin(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_);
 	void ProcessLoginDBResult(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_);
 	void ProcessNoticeDBResult(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_);
@@ -60,8 +63,9 @@ private:
 	void ProcessPlayerTurnNotify(User& user_, UINT16 packetSize_, const std::string noticeTurnMsg);
 	void ProcessRoomChatMessage(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_);
 
-	void ProcessSaveReplayRequest(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_);
-	void ProcessLoadReplayRequest(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_);
+	void ProcessSaveUserDataRequest(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_);
+	void ProcessLoadUserDataRequest(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_);
+	void ProcessLoadUserDataDBResult(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_);
 
 	void PacketManager::RedisReqNotice(User& user, const std::string noticeMsg);
 

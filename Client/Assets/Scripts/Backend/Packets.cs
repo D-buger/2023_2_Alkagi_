@@ -3,8 +3,11 @@ using UnityEngine;
 
 public enum E_PACKET
 {
-    LOGIN_REQUEST = 201, // LOGIN_REQ = 201,
-    LOGIN_RESPONSE = 202, // LOGIN_RES = 202,
+    LOGON_REQUEST = 200,
+    LOGON_RESPONSE = 201,
+
+    LOGIN_REQUEST = 202, // LOGIN_REQ = 201,
+    LOGIN_RESPONSE = 203, // LOGIN_RES = 202,
 
     // Enter
     ROOM_ENTER_REQUEST = 206, // PLAYER_JOINED
@@ -34,9 +37,9 @@ public enum E_PACKET
     ROOM_CHAT_RESPONSE = 222,
     ROOM_CHAT_NOTIFY = 223, // RECEIVE_CHAT_MESSAGE
 
-    REPLAY_SAVE_REQUEST,
-    REPLAY_LOAD_REQUEST,
-    REPLAY_LOAD_RESPONSE
+    USER_DATA_SAVE,
+    USER_DATA_LOAD_REQUEST,
+    USER_DATA_LOAD_RESPONSE
 }
 
 [StructLayout(LayoutKind.Sequential, Size = 16)]
@@ -44,6 +47,25 @@ struct P_PlayerName
 {
     [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
     public string userName;
+}
+
+[StructLayout(LayoutKind.Sequential, Size = 66)]
+struct P_LogonReq
+{
+    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 33)]
+    public string userID;
+    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 33)]
+    public string userPW;
+}
+
+
+[StructLayout(LayoutKind.Sequential, Size = 2)]
+struct P_LogonRes
+{
+    // UInt16 Result;
+    [MarshalAs(UnmanagedType.U2)]
+    public ushort result;
+
 }
 
 [StructLayout(LayoutKind.Sequential, Size = 66)]
@@ -56,13 +78,14 @@ struct P_LoginReq
 }
 
 
-[StructLayout(LayoutKind.Sequential, Size = 2)]
+[StructLayout(LayoutKind.Sequential, Size = 4)]
 struct P_LoginRes
 {
-    // UInt16 Result;
     [MarshalAs(UnmanagedType.U2)]
     public ushort result;
 
+    [MarshalAs(UnmanagedType.U2)]
+    public ushort isSucceed;
 }
 
 [StructLayout(LayoutKind.Sequential, Size = 24)]
@@ -230,21 +253,22 @@ struct P_RoomChatNotify
     public string message;
 }
 
-[StructLayout(LayoutKind.Sequential, Size = 257)]
-struct P_ReplaySave
+[StructLayout(LayoutKind.Sequential, Size = 265)]
+struct P_UserDataSaveRequest
 {
+    [MarshalAs(UnmanagedType.I8)]
+    public long dataType;
+
     [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 257)]
     public string message;
 }
-[StructLayout(LayoutKind.Sequential, Size = 8)]
-struct P_ReplayLoadRequest
+[StructLayout(LayoutKind.Sequential, Size = 0)]
+struct P_UserDataLoadRequest
 {
-    [MarshalAs(UnmanagedType.I8)]
-    public long playID;
 }
 
 [StructLayout(LayoutKind.Sequential, Size = 257)]
-struct P_ReplayLoad
+struct P_UserDataLoadResponse
 {
     [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 257)]
     public string message;
