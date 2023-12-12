@@ -193,6 +193,26 @@ private:
 
 					PushResponse(resTask);
 				}
+				else if (task.TaskID == RedisTaskID::REQUEST_DATA)
+				{
+					auto pRequest = (RedisDataReq*)task.pData;
+
+					RedisDataRes bodyData;
+					CopyUserID(bodyData.UserID, pRequest->UserID);
+
+					std::string str;
+					mConn.get(pRequest->UserID, str);
+					CopyMemory(bodyData.Message, str.c_str(), sizeof(bodyData.Message));
+
+					RedisTask resTask;
+					resTask.UserIndex = task.UserIndex;
+					resTask.TaskID = RedisTaskID::RESPONSE_DATA;
+					resTask.DataSize = sizeof(RedisDataRes);
+					resTask.pData = new char[resTask.DataSize];
+					CopyMemory(resTask.pData, (char*)&bodyData, resTask.DataSize);
+
+					PushResponse(resTask);
+				}
 
 				task.Release();
 			}

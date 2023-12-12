@@ -15,6 +15,8 @@ enum class RedisTaskID : UINT16
 	RESPONSE_NOTICE = 1004,
 	REQUEST_LOGON = 1005,
 	RESPONSE_LOGON = 1006,
+	REQUEST_DATA = 1007,
+	RESPONSE_DATA = 1008
 };
 
 
@@ -70,6 +72,17 @@ struct RedisNoticeReq
 };
 
 struct RedisNoticeRes
+{
+	char UserID[MAX_USER_ID_LEN + 1];
+	char Message[MAX_CHAT_MSG_SIZE + 1];
+};
+
+struct RedisDataReq
+{
+	char UserID[MAX_USER_ID_LEN + 1];
+};
+
+struct RedisDataRes
 {
 	char UserID[MAX_USER_ID_LEN + 1];
 	char Message[MAX_CHAT_MSG_SIZE + 1];

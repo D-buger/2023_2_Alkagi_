@@ -29,6 +29,7 @@ void PacketManager::Init(const UINT32 maxClient_)
 
 	mRecvFuntionDictionary[(int)PACKET_ID::USER_DATA_SAVE] = &PacketManager::ProcessSaveUserDataRequest;
 	mRecvFuntionDictionary[(int)PACKET_ID::USER_DATA_LOAD_REQUEST] = &PacketManager::ProcessLoadUserDataRequest;
+	mRecvFuntionDictionary[(int)RedisTaskID::RESPONSE_DATA] = &PacketManager::ProcessLoadUserDataDBResult;
 
 	CreateCompent(maxClient_);
 
@@ -237,8 +238,6 @@ void PacketManager::ProcessLogonDBResult(UINT32 clientIndex_, UINT16 packetSize_
 
 	LOGON_RESPONSE_PACKET logonResPacket;
 	logonResPacket.Result = pBody->Result;
-
-
 
 	SendPacketFunc(clientIndex_, sizeof(LOGON_RESPONSE_PACKET), (char*)&logonResPacket);
 }
@@ -472,16 +471,30 @@ void PacketManager::ProcessLoadUserDataRequest(UINT32 clientIndex_, UINT16 packe
 {
 	UNREFERENCED_PARAMETER(packetSize_);
 
-	auto pLoadDataReqPacket = reinterpret_cast<USER_DATA_LOAD_REQUEST_PACKET*>(pPacket_);
-
 	auto reqUser = mUserManager->GetUserByConnIdx(clientIndex_);
-	auto roomNum = reqUser->GetCurrentRoom();
 
-	auto pRoom = mRoomManager->GetRoomByNumber(roomNum);
+	RedisDataReq dataReq;
+	CopyUserID(dataReq.UserID, reqUser->GetUserId());
+
+	RedisTask task;
+	task.UserIndex = clientIndex_;
+	task.TaskID = RedisTaskID::REQUEST_DATA;
+	task.DataSize = sizeof(RedisDataReq);
+	task.pData = new char[task.DataSize];
+	CopyMemory(task.pData, (char*)&dataReq, task.DataSize);
+	mRedisMgr->PushTask(task);
+}
+
+void PacketManager::ProcessLoadUserDataDBResult(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_)
+{
+	UNREFERENCED_PARAMETER(packetSize_);
+
+	auto pBody = (RedisDataRes*)pPacket_;
 
 	USER_DATA_LOAD_RESPONSE_PACKET userDataResponse;
-	//StringCbCopyA(replayLoadRequestPacket.Message, sizeof(replayLoadRequestPacket.Message), "Replay Datas");
-	//std::cout << "requested replay id : " << pLoadReplayReqPacket->playID << " " << replayLoadRequestPacket.Message;
+	StringCbCopyA(userDataResponse.Data, sizeof(userDataResponse.Data), pBody->Message);
+
+	std::cout << "[user data send] id : " << Proto::char2Proto(userDataResponse.Data).id() << std::endl;
 
 	SendPacketFunc(clientIndex_, sizeof(USER_DATA_LOAD_RESPONSE_PACKET), (char*)&userDataResponse);
 }

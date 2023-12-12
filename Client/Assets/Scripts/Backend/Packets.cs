@@ -30,9 +30,9 @@ public enum E_PACKET
     ROOM_CHAT_RESPONSE = 222,
     ROOM_CHAT_NOTIFY = 223, // RECEIVE_CHAT_MESSAGE
 
-    REPLAY_SAVE_REQUEST,
-    REPLAY_LOAD_REQUEST,
-    REPLAY_LOAD_RESPONSE
+    USER_DATA_SAVE,
+    USER_DATA_LOAD_REQUEST,
+    USER_DATA_LOAD_RESPONSE
 }
 
 [StructLayout(LayoutKind.Sequential, Size = 16)]
@@ -205,21 +205,22 @@ struct P_RoomChatNotify
     public string message;
 }
 
-[StructLayout(LayoutKind.Sequential, Size = 257)]
-struct P_ReplaySave
+[StructLayout(LayoutKind.Sequential, Size = 265)]
+struct P_UserDataSaveRequest
 {
+    [MarshalAs(UnmanagedType.I8)]
+    public long dataType;
+
     [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 257)]
     public string message;
 }
-[StructLayout(LayoutKind.Sequential, Size = 8)]
-struct P_ReplayLoadRequest
+[StructLayout(LayoutKind.Sequential, Size = 0)]
+struct P_UserDataLoadRequest
 {
-    [MarshalAs(UnmanagedType.I8)]
-    public long playID;
 }
 
 [StructLayout(LayoutKind.Sequential, Size = 257)]
-struct P_ReplayLoad
+struct P_UserDataLoadResponse
 {
     [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 257)]
     public string message;
