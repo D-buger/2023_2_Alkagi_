@@ -26,6 +26,7 @@ void PacketManager::Init(const UINT32 maxClient_)
 	mRecvFuntionDictionary[(int)PACKET_ID::ROOM_LEAVE_REQUEST] = &PacketManager::ProcessLeaveRoom;
 	mRecvFuntionDictionary[(int)PACKET_ID::ROOM_CHAT_REQUEST] = &PacketManager::ProcessRoomChatMessage;
 	mRecvFuntionDictionary[(int)PACKET_ID::PLAYER_MOVEMENT] = &PacketManager::ProcessPlayerMovement;
+	mRecvFuntionDictionary[(int)PACKET_ID::BALL_POSITION] = &PacketManager::ProcessBallPosition;
 
 	mRecvFuntionDictionary[(int)PACKET_ID::USER_DATA_SAVE] = &PacketManager::ProcessSaveUserDataRequest;
 	mRecvFuntionDictionary[(int)PACKET_ID::USER_DATA_LOAD_REQUEST] = &PacketManager::ProcessLoadUserDataRequest;
@@ -339,14 +340,16 @@ void PacketManager::ProcessEnterRoom(UINT32 clientIndex_, UINT16 packetSize_, ch
 	}
 
 	auto roomNumber = pRoomEnterReqPacket->RoomNumber;
-
+	auto pRoom = mRoomManager->GetRoomByNumber(roomNumber);
 
 	// Room::EnterUser()에서 입장하는 유저에게 방안 유저 리스트를 전송한다
 	auto enterResult = mRoomManager->EnterUser(roomNumber, pReqUser);
-
 	{
 		ROOM_ENTER_RESPONSE_PACKET roomEnterResPacket;
 		roomEnterResPacket.Result = enterResult;
+
+		roomEnterResPacket.PlayerNum = pRoom->GetCurrentUserCount();
+		std::cout << "PlayerNum : " << roomEnterResPacket.PlayerNum << std::endl;
 		SendPacketFunc(clientIndex_, sizeof(ROOM_ENTER_RESPONSE_PACKET), (char*)&roomEnterResPacket);
 	}
 	printf("Response Packet Sended");
@@ -356,12 +359,8 @@ void PacketManager::ProcessEnterRoom(UINT32 clientIndex_, UINT16 packetSize_, ch
 		return;
 	}
 
-	auto pRoom = mRoomManager->GetRoomByNumber(roomNumber);
-
-
 	// 방안 유저들에게 입장하는 유저 정보 전송
 	pRoom->NotifyUserEnter(clientIndex_, pReqUser->GetUserId());
-
 }
 
 
@@ -393,7 +392,6 @@ void PacketManager::ProcessPlayerMovement(UINT32 clientIndex_, UINT16 packetSize
 		return;
 	}
 
-
 	printf("[ProcessPlayerMovement] userUUID(%lld) dx=%f, dy=%f, rx:%f, ry:%f, rz:%f \n", playerMovement->userUUID,
 		playerMovement->dx, playerMovement->dy, playerMovement->rotation.x, playerMovement->rotation.y, playerMovement->rotation.z);
 
@@ -416,6 +414,45 @@ void PacketManager::ProcessPlayerMovement(UINT32 clientIndex_, UINT16 packetSize
 	pRoom->SendToAllUser(updateMovement.PacketLength, (char*)&updateMovement, clientIndex_, false);
 }
 
+void PacketManager::ProcessBallPosition(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_)
+{
+	UNREFERENCED_PARAMETER(packetSize_);
+	UNREFERENCED_PARAMETER(pPacket_);
+
+	auto BallPosition = reinterpret_cast<BALL_POSITION*>(pPacket_);
+
+	if (BallPosition->userUUID != clientIndex_)
+	{
+		printf("[ProcessPlayerMovement] userUUID(%lld) != clientIndex_(%ld)\n", BallPosition->userUUID, clientIndex_);
+		return;
+	}
+
+	printf("[ProcessPlayerMovement] userUUID(%lld), index=%d dx=%f, dy=%f \n",
+		BallPosition->userUUID, BallPosition->childIndex, BallPosition->ballPos.x, BallPosition->ballPos.z);
+
+	auto reqUser = mUserManager->GetUserByConnIdx(clientIndex_);
+	auto roomNum = reqUser->GetCurrentRoom();
+
+	auto pRoom = mRoomManager->GetRoomByNumber(roomNum);
+	if (pRoom == nullptr)
+	{
+		printf("[ProcessPlayerMovement] pRoom == nullptr userUUID(%lld), roomNum(%d)\n", BallPosition->userUUID, roomNum);
+		return;
+	}
+
+	UPDATE_BALL_POSITION updateBall;
+	updateBall.childIndex = BallPosition->childIndex;
+	updateBall.ballPos = reqUser->UpdateBallPosition(BallPosition->ballPos);
+
+	pRoom->SendToAllUser(updateBall.PacketLength, (char*)&updateBall, clientIndex_, false);
+}
+
+void PacketManager::ProcessPlayerTurnNotify(User& user_, UINT16 packetSize_, const std::string noticeTurnMsg)
+{
+	printf("ProcessPlayerTurnNotify UerIndex : %d\n", user_);
+
+
+}
 
 void PacketManager::ProcessRoomChatMessage(UINT32 clientIndex_, UINT16 packetSize_, char* pPacket_)
 {

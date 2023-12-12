@@ -9,7 +9,6 @@ public class Player : MonoBehaviour
     public bool IsLocal;
     public PlayerMovement Movement;
 
-    // Update is called once per frame
     void FixedUpdate()
     {
         if (Movement != null && IsLocal)

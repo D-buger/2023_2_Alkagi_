@@ -61,6 +61,7 @@ public:
 			if (pRoomNpc == nullptr) {
 				continue;
 			}
+
 			ROOM_USER_INFO_NTF_PACKET roomUserInfoNtf;
 			roomUserInfoNtf.userUUID = pRoomNpc->GetNetConnIdx();
 			CopyUserID(roomUserInfoNtf.userID, *pRoomNpc);

@@ -25,10 +25,17 @@ public enum E_PACKET
     PLAYER_MOVEMENT,
     UPDATE_PLAYER_MOVEMENT,
 
+    // Ball Position
+    BALL_POSITION,
+    UPDATE_BALL_POSITION,
+
+    // 현재 무슨 플레이어의 턴인지를 알려줍니다.
+    PLAYER_TURN_NOTIFY,
+
     // Chat
-    ROOM_CHAT_REQUEST = 221, // SEND_CHAT_MESSAGE
-    ROOM_CHAT_RESPONSE = 222,
-    ROOM_CHAT_NOTIFY = 223, // RECEIVE_CHAT_MESSAGE
+    ROOM_CHAT_REQUEST = 230, // SEND_CHAT_MESSAGE
+    ROOM_CHAT_RESPONSE = 231,
+    ROOM_CHAT_NOTIFY = 232, // RECEIVE_CHAT_MESSAGE
 
     USER_DATA_SAVE,
     USER_DATA_LOAD_REQUEST,
@@ -98,11 +105,14 @@ struct P_RoomEnterRequest
     public int roomNumber;
 }
 
-[StructLayout(LayoutKind.Sequential, Size = 2)]
+[StructLayout(LayoutKind.Sequential, Size = 6)]
 struct P_RoomEnterResponse
 {
     [MarshalAs(UnmanagedType.I2)]
     public short result;
+
+    [MarshalAs(UnmanagedType.I4)]
+    public int PlayerNum;
 }
 
 [StructLayout(LayoutKind.Sequential, Size = 41)]
@@ -187,6 +197,44 @@ struct P_UpdatePlayerMovement
 
 }
 
+[StructLayout(LayoutKind.Sequential, Size = 26)]
+struct P_BallPosition
+{
+    [MarshalAs(UnmanagedType.I8)]
+    public long player_id;
+
+    [MarshalAs(UnmanagedType.I4)]
+    public int child_index;
+
+    [MarshalAs(UnmanagedType.Struct)]
+    public Vector3 ballPos;
+}
+
+[StructLayout(LayoutKind.Sequential, Size = 26)]
+struct P_UpdateBallPosition
+{
+    [MarshalAs(UnmanagedType.I8)]
+    public long player_id;
+
+    [MarshalAs(UnmanagedType.I4)]
+    public int child_index;
+
+    [MarshalAs(UnmanagedType.Struct)]
+    public Vector3 ballPos;
+}
+
+[StructLayout(LayoutKind.Sequential, Size = 294)]
+struct  P_PlayerTurnNotify
+{
+    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 33)]
+    public string userID;
+
+    [MarshalAs(UnmanagedType.I4)]
+    public int curTurn;
+
+    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 257)]
+    public string message;
+}
 
 [StructLayout(LayoutKind.Sequential, Size = 257)]
 struct P_RoomChatRequest
