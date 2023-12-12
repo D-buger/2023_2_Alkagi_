@@ -1,26 +1,59 @@
-﻿  main.cpp
-C:\Users\phil0\Desktop\DB\GitHub\2023_2_Alkagi\Server\ServerNetwork\ClientInfo.h(85,13): warning C4996: 'WSASocketA': Use WSASocketW() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
-  (소스 파일 'main.cpp'을(를) 컴파일하는 중)
-  
-C:\Users\phil0\Desktop\DB\GitHub\2023_2_Alkagi\Server\ServerNetwork\IOCPServer.h(35,19): warning C4996: 'WSASocketA': Use WSASocketW() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
-  (소스 파일 'main.cpp'을(를) 컴파일하는 중)
-  
-  Packet.cpp
-  PacketManager.cpp
-C:\Users\phil0\Desktop\DB\GitHub\2023_2_Alkagi\Server\Room.h(95,69): warning C4244: '인수': 'INT64'에서 'const INT32'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  (소스 파일 'PacketManager.cpp'을(를) 컴파일하는 중)
-  
-C:\Users\phil0\Desktop\DB\GitHub\2023_2_Alkagi\Server\Room.h(145,14): warning C4267: '초기화 중': 'size_t'에서 'INT32'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  (소스 파일 'PacketManager.cpp'을(를) 컴파일하는 중)
-  
-C:\Users\phil0\Desktop\DB\GitHub\2023_2_Alkagi\Server\PacketManager.cpp(423,9): warning C4477: 'printf' : 서식 문자열 '%s'에 'char *' 형식의 인수가 필요하지만 variadic 인수 2의 형식이 'std::string'입니다.
-  unity.cpp
-  코드를 생성하고 있습니다...
-C:\Users\phil0\Desktop\DB\GitHub\2023_2_Alkagi\Server\thirdparty\CRedisConnEx.h(45): warning C4715: 'RedisCpp::CRedisConnEx::initSubscribe': 모든 제어 경로에서 값을 반환하지는 않습니다.
-hiredis.lib(hiredis.obj) : warning LNK4099: '' PDB를 'hiredis.lib(hiredis.obj)' 또는 ''에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-hiredis.lib(net.obj) : warning LNK4099: '' PDB를 'hiredis.lib(net.obj)' 또는 ''에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-hiredis.lib(async.obj) : warning LNK4099: '' PDB를 'hiredis.lib(async.obj)' 또는 ''에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-hiredis.lib(read.obj) : warning LNK4099: '' PDB를 'hiredis.lib(read.obj)' 또는 ''에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-hiredis.lib(sds.obj) : warning LNK4099: '' PDB를 'hiredis.lib(sds.obj)' 또는 ''에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-hiredis.lib(sockcompat.obj) : warning LNK4099: '' PDB를 'hiredis.lib(sockcompat.obj)' 또는 ''에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-  GameServer.vcxproj -> C:\Users\phil0\Desktop\DB\GitHub\2023_2_Alkagi\bin\ChatServer.exe
+﻿  PacketManager.cpp
+D:\UnityProjects\Alkagi_\Server\Room.h(95,69): warning C4244: '인수': 'INT64'에서 'const INT32'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\UnityProjects\Alkagi_\Server\Room.h(145,14): warning C4267: '초기화 중': 'size_t'에서 'INT32'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\UnityProjects\Alkagi_\Server\RedisTaskDefine.h(1,1): warning C4828: 파일에 0x5d3 오프셋에서 시작하는 문자가 포함되어 있습니다. 이 문자는 현재 원본 문자 집합에서 잘못된 문자입니다(코드 페이지 949).
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\stubs\status.h(97,15): warning C4251: 'google::protobuf::util::status_internal::Status::error_message_': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'에서는 class 'google::protobuf::util::status_internal::Status'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.36.32532\include\xstring(5155,29): message : 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' 선언을 참조하십시오.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\stubs\logging.h(100,15): warning C4251: 'google::protobuf::internal::LogMessage::message_': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'에서는 class 'google::protobuf::internal::LogMessage'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.36.32532\include\xstring(5155,29): message : 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' 선언을 참조하십시오.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\io\coded_stream.h(1275,28): warning C4251: 'google::protobuf::io::CodedOutputStream::default_serialization_deterministic_': struct 'std::atomic<bool>'에서는 class 'google::protobuf::io::CodedOutputStream'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.36.32532\include\atomic(2761,33): message : 'std::atomic<bool>' 선언을 참조하십시오.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\arena_impl.h(401,23): warning C4251: 'google::protobuf::internal::SerialArena::space_allocated_': struct 'std::atomic<unsigned __int64>'에서는 class 'google::protobuf::internal::SerialArena'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.36.32532\include\atomic(2773,35): message : 'std::atomic<unsigned __int64>' 선언을 참조하십시오.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\arena_impl.h(532,29): warning C4251: 'google::protobuf::internal::ThreadSafeArena::alloc_policy_': class 'google::protobuf::internal::TaggedAllocationPolicyPtr'에서는 class 'google::protobuf::internal::ThreadSafeArena'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\arena_impl.h(123,7): message : 'google::protobuf::internal::TaggedAllocationPolicyPtr' 선언을 참조하십시오.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\arena_impl.h(537,29): warning C4251: 'google::protobuf::internal::ThreadSafeArena::threads_': struct 'std::atomic<google::protobuf::internal::SerialArena *>'에서는 class 'google::protobuf::internal::ThreadSafeArena'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\arena_impl.h(537,8): message : 'std::atomic<google::protobuf::internal::SerialArena *>' 선언을 참조하십시오.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\arena_impl.h(538,29): warning C4251: 'google::protobuf::internal::ThreadSafeArena::hint_': struct 'std::atomic<google::protobuf::internal::SerialArena *>'에서는 class 'google::protobuf::internal::ThreadSafeArena'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\arena_impl.h(537,8): message : 'std::atomic<google::protobuf::internal::SerialArena *>' 선언을 참조하십시오.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\arena_impl.h(660,30): warning C4251: 'google::protobuf::internal::ThreadSafeArena::arena_stats_': class 'google::protobuf::internal::ThreadSafeArenaStatsHandle'에서는 class 'google::protobuf::internal::ThreadSafeArena'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\arenaz_sampler.h(159,7): message : 'google::protobuf::internal::ThreadSafeArenaStatsHandle' 선언을 참조하십시오.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\arenastring.h(82,43): warning C4251: 'google::protobuf::internal::LazyString::inited_': struct 'std::atomic<const std::string *>'에서는 class 'google::protobuf::internal::LazyString'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\arenastring.h(82,16): message : 'std::atomic<const std::string *>' 선언을 참조하십시오.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\arenastring.h(367,19): warning C4251: 'google::protobuf::internal::ArenaStringPtr::tagged_ptr_': class 'google::protobuf::internal::TaggedStringPtr'에서는 struct 'google::protobuf::internal::ArenaStringPtr'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\arenastring.h(97,7): message : 'google::protobuf::internal::TaggedStringPtr' 선언을 참조하십시오.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\metadata_lite.h(307,15): warning C4251: 'google::protobuf::internal::LiteUnknownFieldSetter::buffer_': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'에서는 class 'google::protobuf::internal::LiteUnknownFieldSetter'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.36.32532\include\xstring(5155,29): message : 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' 선언을 참조하십시오.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\generated_message_util.h(194,20): warning C4251: 'google::protobuf::internal::CachedSize::size_': struct 'std::atomic<int>'에서는 class 'google::protobuf::internal::CachedSize'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.36.32532\include\atomic(2768,35): message : 'std::atomic<int>' 선언을 참조하십시오.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\stubs\mutex.h(136,40): warning C4251: 'google::protobuf::internal::WrappedMutex::mu_': class 'google::protobuf::internal::CallOnceInitializedMutex<std::mutex>'에서는 class 'google::protobuf::internal::WrappedMutex'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\stubs\mutex.h(136,3): message : 'google::protobuf::internal::CallOnceInitializedMutex<std::mutex>' 선언을 참조하십시오.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\descriptor.h(2063,27): warning C4251: 'google::protobuf::DescriptorPool::tables_': class 'std::unique_ptr<google::protobuf::DescriptorPool::Tables,std::default_delete<google::protobuf::DescriptorPool::Tables>>'에서는 class 'google::protobuf::DescriptorPool'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\descriptor.h(2063,8): message : 'std::unique_ptr<google::protobuf::DescriptorPool::Tables,std::default_delete<google::protobuf::DescriptorPool::Tables>>' 선언을 참조하십시오.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\descriptor.h(2073,31): warning C4251: 'google::protobuf::DescriptorPool::unused_import_track_files_': class 'std::map<std::string,bool,std::less<std::string>,std::allocator<std::pair<const std::string,bool>>>'에서는 class 'google::protobuf::DescriptorPool'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\descriptor.h(2073,8): message : 'std::map<std::string,bool,std::less<std::string>,std::allocator<std::pair<const std::string,bool>>>' 선언을 참조하십시오.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\io\zero_copy_stream_impl_lite.h(247,30): warning C4251: 'google::protobuf::io::CopyingInputStreamAdaptor::buffer_': class 'std::unique_ptr<uint8_t [],std::default_delete<uint8_t []>>'에서는 class 'google::protobuf::io::CopyingInputStreamAdaptor'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\io\zero_copy_stream_impl_lite.h(247,8): message : 'std::unique_ptr<uint8_t [],std::default_delete<uint8_t []>>' 선언을 참조하십시오.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\io\zero_copy_stream_impl_lite.h(338,30): warning C4251: 'google::protobuf::io::CopyingOutputStreamAdaptor::buffer_': class 'std::unique_ptr<uint8_t [],std::default_delete<uint8_t []>>'에서는 class 'google::protobuf::io::CopyingOutputStreamAdaptor'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\io\zero_copy_stream_impl_lite.h(247,8): message : 'std::unique_ptr<uint8_t [],std::default_delete<uint8_t []>>' 선언을 참조하십시오.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\unknown_field_set.h(211,29): warning C4251: 'google::protobuf::UnknownFieldSet::fields_': class 'std::vector<google::protobuf::UnknownField,std::allocator<google::protobuf::UnknownField>>'에서는 class 'google::protobuf::UnknownFieldSet'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\unknown_field_set.h(211,8): message : 'std::vector<google::protobuf::UnknownField,std::allocator<google::protobuf::UnknownField>>' 선언을 참조하십시오.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\extension_set.h(1057,26): warning C4251: 'google::protobuf::internal::RepeatedPrimitiveDefaults::default_repeated_field_int32_t_': class 'google::protobuf::RepeatedField<int32_t>'에서는 class 'google::protobuf::internal::RepeatedPrimitiveDefaults'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\repeated_field.h(1193,78): message : 'google::protobuf::RepeatedField<int32_t>' 선언을 참조하십시오.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\extension_set.h(1058,26): warning C4251: 'google::protobuf::internal::RepeatedPrimitiveDefaults::default_repeated_field_int64_t_': class 'google::protobuf::RepeatedField<int64_t>'에서는 class 'google::protobuf::internal::RepeatedPrimitiveDefaults'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\repeated_field.h(1195,78): message : 'google::protobuf::RepeatedField<int64_t>' 선언을 참조하십시오.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\extension_set.h(1059,27): warning C4251: 'google::protobuf::internal::RepeatedPrimitiveDefaults::default_repeated_field_uint32_t_': class 'google::protobuf::RepeatedField<uint32_t>'에서는 class 'google::protobuf::internal::RepeatedPrimitiveDefaults'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\repeated_field.h(1194,79): message : 'google::protobuf::RepeatedField<uint32_t>' 선언을 참조하십시오.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\extension_set.h(1060,27): warning C4251: 'google::protobuf::internal::RepeatedPrimitiveDefaults::default_repeated_field_uint64_t_': class 'google::protobuf::RepeatedField<uint64_t>'에서는 class 'google::protobuf::internal::RepeatedPrimitiveDefaults'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\repeated_field.h(1196,79): message : 'google::protobuf::RepeatedField<uint64_t>' 선언을 참조하십시오.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\extension_set.h(1061,25): warning C4251: 'google::protobuf::internal::RepeatedPrimitiveDefaults::default_repeated_field_double_': class 'google::protobuf::RepeatedField<double>'에서는 class 'google::protobuf::internal::RepeatedPrimitiveDefaults'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\repeated_field.h(1198,77): message : 'google::protobuf::RepeatedField<double>' 선언을 참조하십시오.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\extension_set.h(1062,24): warning C4251: 'google::protobuf::internal::RepeatedPrimitiveDefaults::default_repeated_field_float_': class 'google::protobuf::RepeatedField<float>'에서는 class 'google::protobuf::internal::RepeatedPrimitiveDefaults'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\repeated_field.h(1197,76): message : 'google::protobuf::RepeatedField<float>' 선언을 참조하십시오.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\extension_set.h(1063,23): warning C4251: 'google::protobuf::internal::RepeatedPrimitiveDefaults::default_repeated_field_bool_': class 'google::protobuf::RepeatedField<bool>'에서는 class 'google::protobuf::internal::RepeatedPrimitiveDefaults'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+D:\UnityProjects\Alkagi_\Server\Protobuf\include\google\protobuf\repeated_field.h(1192,75): message : 'google::protobuf::RepeatedField<bool>' 선언을 참조하십시오.
+D:\UnityProjects\Alkagi_\Server\ProtobufManager.h(21,2): warning C4091: 'static ': 변수를 선언하지 않으면 'Proto' 왼쪽은 무시됩니다.
+D:\UnityProjects\Alkagi_\Server\thirdparty\CRedisConn.h(668,16): warning C4244: 'return': '__int64'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\UnityProjects\Alkagi_\Server\PacketManager.cpp(515,9): warning C4477: 'printf' : 서식 문자열 '%s'에 'char *' 형식의 인수가 필요하지만 variadic 인수 2의 형식이 'std::string'입니다.
+D:\UnityProjects\Alkagi_\Server\thirdparty\CRedisConnEx.h(45): warning C4715: 'RedisCpp::CRedisConnEx::initSubscribe': 모든 제어 경로에서 값을 반환하지는 않습니다.
+  GameServer.vcxproj -> D:\UnityProjects\Alkagi_\bin\ChatServer.exe

@@ -650,6 +650,24 @@ public:
 
 		return ret;
 	}
+
+	int size() {
+		if (!_connected || !_redCtx)
+		{
+			_errStr = _errDes[ERR_NO_CONNECT];
+			return false;
+		}
+
+		redisReply* reply = redisCmd("dbsize");
+
+		if (_getError(reply))
+		{
+			return -1;
+		}
+		else {
+			return reply->integer;
+		}
+	}
 	
 	bool get(const std::string& key, std::string& value)
 	{
@@ -686,6 +704,29 @@ public:
 		else
 		{
 		}
+
+		return ret;
+	}
+
+	bool set(const std::string& key, const std::string& value) {
+		if (!_connected || !_redCtx)
+		{
+			_errStr = _errDes[ERR_NO_CONNECT];
+			return false;
+		}
+
+		bool ret = false;
+		redisReply* reply = redisCmd("SET %s %s", key.c_str(), value.c_str());
+
+		if (_getError(reply))
+		{
+			ret = false;
+		}
+		else
+		{
+			ret = true;
+		}
+		
 
 		return ret;
 	}

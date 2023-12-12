@@ -1,11 +1,19 @@
-﻿using System.Collections;
+﻿using ProtoBuf;
+using System.CodeDom;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using Tutorial;
 using UnityEngine;
+using Google.Protobuf;
 
 public unsafe class Match : MonoBehaviour, IPacketReceiver
 {
     public static Match Current;
     public Dictionary<long, Player> Players;
+    
 
     void Awake()
     {
@@ -24,6 +32,9 @@ public unsafe class Match : MonoBehaviour, IPacketReceiver
             roomNumber = 0
         };
         Client.TCP.SendPacket2(E_PACKET.ROOM_ENTER_REQUEST, request);
+
+        P_UserDataLoadRequest dataReq = default;
+        Client.TCP.SendPacket2(E_PACKET.USER_DATA_LOAD_REQUEST, dataReq);
     }
 
     private void OnGUI()
@@ -86,10 +97,14 @@ public unsafe class Match : MonoBehaviour, IPacketReceiver
                     player.Movement.Move(updateMovement.motion);
                 }
                 break;
-            case E_PACKET.REPLAY_LOAD_RESPONSE:
-                P_ReplayLoad replayLoad = UnsafeCode.ByteArrayToStructure<P_ReplayLoad>(packet.data);
+            case E_PACKET.USER_DATA_LOAD_RESPONSE:
+                P_UserDataLoadResponse dataLoad = UnsafeCode.ByteArrayToStructure<P_UserDataLoadResponse>(packet.data);
                 {
-                    Debug.Log("Replay Load : " + replayLoad.message);
+                    MemoryStream ms = new MemoryStream();
+                    ms.Write(Encoding.Default.GetBytes(dataLoad.message));
+
+                    //User user = User.Parser.ParseFrom(Encoding.Default.GetBytes(dataLoad.message), 0 , Encoding.Default.GetBytes(dataLoad.message).Length * sizeof(byte));
+                    //Debug.Log(user.Id);
                 }
                 break;
             default:

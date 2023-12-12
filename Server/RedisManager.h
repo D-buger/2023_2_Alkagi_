@@ -4,6 +4,7 @@
 //#include "ErrorCode.h"
 
 //#include "../thirdparty/CRedisConn.h"
+#include "ProtobufManager.h"
 #include "thirdparty/CRedisConnEx.h"
 #include <vector>
 #include <deque>
@@ -117,26 +118,32 @@ private:
 				{
 					auto pRequest = (RedisLoginReq*)task.pData;
 
-					RedisLoginRes bodyData;
-					bodyData.Result = (UINT16)ERROR_CODE::LOGIN_USER_INVALID_PW;
-
-					std::string value;
-					if (mConn.get(pRequest->UserID, value))
-					{
-						bodyData.Result = (UINT16)ERROR_CODE::NONE;
-
-						if (value.compare(pRequest->UserPW) == 0)
-						{
-							bodyData.Result = (UINT16)ERROR_CODE::NONE;
-							CopyUserID(bodyData.UserID, pRequest->UserID);
-						}
-					}
+					RedisLoginRes bodyData; 
+					CopyUserID(bodyData.UserID, pRequest->UserID);
 
 					RedisTask resTask;
 					resTask.UserIndex = task.UserIndex;
 					resTask.TaskID = RedisTaskID::RESPONSE_LOGIN;
 					resTask.DataSize = sizeof(RedisLoginRes);
 					resTask.pData = new char[resTask.DataSize];
+
+					std::string value;
+					if (mConn.get(pRequest->UserID, value))
+					{
+					    tutorial::User user = Proto::char2Proto(value);
+						if (user.pw().compare(pRequest->UserPW) == 0)
+						{
+							bodyData.Result = (UINT16)ERROR_CODE::NONE;
+						}
+						else {
+							bodyData.Result = (UINT16)ERROR_CODE::LOGIN_USER_INVALID_PW;
+						}
+
+					}
+					else {
+						bodyData.Result = (UINT16)ERROR_CODE::USER_MGR_INVALID_USER_INDEX;
+					}
+
 					CopyMemory(resTask.pData, (char*)&bodyData, resTask.DataSize);
 
 					PushResponse(resTask);
@@ -146,7 +153,65 @@ private:
 					auto pRequest = (RedisNoticeReq*)task.pData;
 
 					mConn.publish("ch_notice", pRequest->Message);
+				}
+				else if (task.TaskID == RedisTaskID::REQUEST_LOGON) {
+					auto pRequest = (RedisLogonReq*)task.pData;
 
+					RedisLogonRes bodyData;
+					CopyUserID(bodyData.UserID, pRequest->UserID);
+
+					std::string str;
+					mConn.get(pRequest->UserID, str);
+					if (str != "") {
+						bodyData.Result = (UINT16)ERROR_CODE::USER_MGR_INVALID_USER_UNIQUEID;
+					}
+					else {
+						tutorial::User user;
+						user.set_uid(mConn.size() + 1);
+						user.set_id(pRequest->UserID);
+						user.set_nick(pRequest->UserID);
+						user.set_pw(pRequest->UserPW);
+						user.set_gamenum(0);
+						user.set_winnum(0);
+
+						if (mConn.set(pRequest->UserID, Proto::Proto2char(user)))
+						{
+							bodyData.Result = (UINT16)ERROR_CODE::NONE;
+						}
+						else {
+							bodyData.Result = (UINT16)ERROR_CODE::USER_MGR_INVALID_USER_UNIQUEID;
+						}
+					}
+
+					RedisTask resTask;
+					resTask.UserIndex = task.UserIndex;
+					resTask.TaskID = RedisTaskID::RESPONSE_LOGON;
+					resTask.DataSize = sizeof(RedisLogonRes);
+					resTask.pData = new char[resTask.DataSize];
+
+					CopyMemory(resTask.pData, (char*)&bodyData, resTask.DataSize);
+
+					PushResponse(resTask);
+				}
+				else if (task.TaskID == RedisTaskID::REQUEST_DATA)
+				{
+					auto pRequest = (RedisDataReq*)task.pData;
+
+					RedisDataRes bodyData;
+					CopyUserID(bodyData.UserID, pRequest->UserID);
+
+					std::string str;
+					mConn.get(pRequest->UserID, str);
+					CopyMemory(bodyData.Message, str.c_str(), sizeof(bodyData.Message));
+
+					RedisTask resTask;
+					resTask.UserIndex = task.UserIndex;
+					resTask.TaskID = RedisTaskID::RESPONSE_DATA;
+					resTask.DataSize = sizeof(RedisDataRes);
+					resTask.pData = new char[resTask.DataSize];
+					CopyMemory(resTask.pData, (char*)&bodyData, resTask.DataSize);
+
+					PushResponse(resTask);
 				}
 
 				task.Release();
@@ -208,8 +273,6 @@ private:
 		std::lock_guard<std::mutex> guard(mResLock);
 		mResponseTask.push_back(task_);
 	}
-
-
 
 
 private:
